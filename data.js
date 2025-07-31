@@ -58,3 +58,5 @@ const pool = gameCategories[activeCategory];
 // Daily answer logic — rotate based on day
 const todayIndex = new Date().getDate() % pool.length;
 const answer = pool[todayIndex].toLowerCase();
+
+window.gameCategories = gameCategories;
