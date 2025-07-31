@@ -51,6 +51,9 @@ const gameCategories = {
   ]
 };
 
+// Make it globally available to script.js
+window.gameCategories = gameCategories;
+
 // Get active category (default: 'item')
 const activeCategory = localStorage.getItem("category") || "item";
 const pool = gameCategories[activeCategory];
@@ -59,4 +62,7 @@ const pool = gameCategories[activeCategory];
 const todayIndex = new Date().getDate() % pool.length;
 const answer = pool[todayIndex].toLowerCase();
 
-window.gameCategories = gameCategories;
+// Make these available to script.js too
+window.activeCategory = activeCategory;
+window.answer = answer;
+window.pool = pool;
