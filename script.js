@@ -1,3 +1,14 @@
+const categorySelect = document.getElementById("category-select");
+
+// Set dropdown to current category on load
+categorySelect.value = localStorage.getItem("category") || "item";
+
+// When category changes, store it and reload page
+categorySelect.addEventListener("change", () => {
+  localStorage.setItem("category", categorySelect.value);
+  location.reload(); // refresh page to use new category
+});
+
 const guessInput = document.getElementById("guess-input");
 const submitBtn = document.getElementById("submit-btn");
 const guessHistory = document.getElementById("guess-history");
