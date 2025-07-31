@@ -2,13 +2,12 @@
   <h1>MapleGuessr</h1>
   <p class="instructions">Guess the daily Maple item, NPC, or boss!</p>
 
-  <label for="category-select">Choose category:</label>
-  <select id="category-select">
-    <option value="item">Items</option>
-    <option value="npc">NPCs</option>
-    <option value="boss">Bosses</option>
-  </select>
-
+<div class="category-buttons">
+  <button data-category="item">Items</button>
+  <button data-category="npc">NPCs</button>
+  <button data-category="boss">Bosses</button>
+</div>
+  
   <input type="text" id="guess-input" placeholder="Enter your guess..." autocomplete="off" />
   <button id="submit-btn">Submit</button>
 
