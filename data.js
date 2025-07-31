@@ -1,54 +1,60 @@
-// MapleGuessr daily pool
-const gameData = [
-  // Items
-  { name: "Zakum Helmet", type: "item" },
-  { name: "Maple Claw", type: "item" },
-  { name: "Maple Skanda", type: "item" },
-  { name: "Stonetooth Sword", type: "item" },
-  { name: "Maple Soul Singer", type: "item" },
-  { name: "Green Christmas Sock", type: "item" },
-  { name: "Dark Scroll for Claw for ATT", type: "item" },
-  { name: "Scroll for Overall for DEX", type: "item" },
-  { name: "Scroll for Overall for INT", type: "item" },
-  { name: "Scroll for Cape for LUK", type: "item" },
-  { name: "Scroll for Earring for INT", type: "item" },
-  { name: "Scroll for Shield for Magic Attack", type: "item" },
-  { name: "Stormcaster Gloves", type: "item" },
-  { name: "Work Gloves", type: "item" },
-  { name: "Onyx Apple", type: "item" },
-  { name: "Heartstopper", type: "item" },
-  { name: "Warrior Elixir", type: "item" },
-  { name: "Wizard Elixir", type: "item" },
+// MapleGuessr daily pools by category
+const gameCategories = {
+  item: [
+    "Zakum Helmet",
+    "Maple Claw",
+    "Maple Skanda",
+    "Stonetooth Sword",
+    "Maple Soul Singer",
+    "Green Christmas Sock",
+    "Dark Scroll for Claw for ATT",
+    "Scroll for Overall for DEX",
+    "Scroll for Overall for INT",
+    "Scroll for Cape for LUK",
+    "Scroll for Earring for INT",
+    "Scroll for Shield for Magic Attack",
+    "Stormcaster Gloves",
+    "Work Gloves",
+    "Onyx Apple",
+    "Heartstopper",
+    "Warrior Elixir",
+    "Wizard Elixir"
+  ],
+  npc: [
+    "Grendel the Really Old",
+    "Athena Pierce",
+    "Dances with Balrog",
+    "Dark Lord",
+    "Cody",
+    "Spinel",
+    "Chief Tatamo",
+    "Moira",
+    "Maple Administrator"
+  ],
+  boss: [
+    "Zakum",
+    "Papulatus",
+    "Bigfoot",
+    "Anego",
+    "Pianus",
+    "Crimsonwood Margana",
+    "Headless Horseman",
+    "Ravana",
+    "Scarlion",
+    "Targa",
+    "Mano",
+    "Stumpy",
+    "Faust",
+    "Ephenia",
+    "Chaos Zakum",
+    "Chaos Papulatus"
+  ]
+};
 
-  // NPCs
-  { name: "Grendel the Really Old", type: "npc" },
-  { name: "Athena Pierce", type: "npc" },
-  { name: "Dances with Balrog", type: "npc" },
-  { name: "Dark Lord", type: "npc" },
-  { name: "Cody", type: "npc" },
-  { name: "Spinel", type: "npc" },
-  { name: "Chief Tatamo", type: "npc" },
-  { name: "Moira", type: "npc" },
-  { name: "Maple Administrator", type: "npc" },
-
-  // Bosses
-  { name: "Zakum", type: "boss" },
-  { name: "Papulatus", type: "boss" },
-  { name: "Bigfoot", type: "boss" },
-  { name: "Anego", type: "boss" },
-  { name: "Pianus", type: "boss" },
-  { name: "Crimsonwood Margana", type: "boss" },
-  { name: "Headless Horseman", type: "boss" },
-  { name: "Ravana", type: "boss" },
-  { name: "Scarlion", type: "boss" },
-  { name: "Targa", type: "boss" },
-  { name: "Mano", type: "boss" },
-  { name: "Stumpy", type: "boss" },
-  { name: "Faust", type: "boss" },
-  { name: "Ephenia", type: "boss" },
-  { name: "Chaos", type: "boss" },
-];
+// Get active category (default: 'item')
+const activeCategory = localStorage.getItem("category") || "item";
+const pool = gameCategories[activeCategory];
 
 // Daily answer logic — rotate based on day
-const todayIndex = new Date().getDate() % gameData.length;
-const answer = gameData[todayIndex].name.toLowerCase();
+const todayIndex = new Date().getDate() % pool.length;
+const answer = pool[todayIndex].toLowerCase();
