@@ -1,29 +1,49 @@
-const categorySelect = document.getElementById("category-select");
-
-// Set dropdown to current category on load
-categorySelect.value = localStorage.getItem("category") || "item";
-
-// When category changes, store it and reload page
-categorySelect.addEventListener("change", () => {
-  localStorage.setItem("category", categorySelect.value);
-  location.reload(); // refresh page to use new category
-});
-
+// Load data from data.js
 const guessInput = document.getElementById("guess-input");
 const submitBtn = document.getElementById("submit-btn");
 const guessHistory = document.getElementById("guess-history");
 const result = document.getElementById("result");
+const suggestionBox = document.createElement("ul");
+suggestionBox.id = "suggestions";
+guessInput.insertAdjacentElement("afterend", suggestionBox);
 
-let guesses = JSON.parse(localStorage.getItem("mapleguessr_guesses")) || [];
+// Get current category and pool
+const gameCategories = window.gameCategories;
+const activeCategory = localStorage.getItem("category") || "item";
+const pool = gameCategories[activeCategory];
+const todayIndex = new Date().getDate() % pool.length;
+const answer = pool[todayIndex].toLowerCase();
 
+let guesses = JSON.parse(localStorage.getItem("mapleguessr_guesses_" + activeCategory)) || [];
+
+// Normalize input
 function normalize(text) {
   return text.trim().toLowerCase();
 }
 
-// Load previous guesses on page load
+// Load existing guesses
 guesses.forEach(g => addGuessToHistory(g));
 
-// Handle submit
+// Suggest matching entries
+guessInput.addEventListener("input", () => {
+  const val = normalize(guessInput.value);
+  suggestionBox.innerHTML = "";
+
+  if (val.length === 0) return;
+
+  const matches = pool.filter(entry => entry.toLowerCase().includes(val));
+  matches.slice(0, 5).forEach(match => {
+    const li = document.createElement("li");
+    li.textContent = match;
+    li.addEventListener("click", () => {
+      guessInput.value = match;
+      suggestionBox.innerHTML = "";
+    });
+    suggestionBox.appendChild(li);
+  });
+});
+
+// Submit guess
 submitBtn.addEventListener("click", () => {
   const userGuess = normalize(guessInput.value);
   if (!userGuess) return;
@@ -34,29 +54,24 @@ submitBtn.addEventListener("click", () => {
   }
 
   guesses.push(userGuess);
-  localStorage.setItem("mapleguessr_guesses", JSON.stringify(guesses));
-
+  localStorage.setItem("mapleguessr_guesses_" + activeCategory, JSON.stringify(guesses));
   addGuessToHistory(userGuess);
 
   if (userGuess === answer) {
     result.textContent = `🎉 You got it in ${guesses.length} guesses!`;
+    result.style.color = "#6dff6d";
   } else {
-    result.textContent = "❌ Not quite, keep trying!";
+    result.textContent = `❌ Not quite. ${guesses.length} guesses so far.`;
+    result.style.color = "#ff7a7a";
   }
 
   guessInput.value = "";
+  suggestionBox.innerHTML = "";
 });
 
+// Add guess to the history list
 function addGuessToHistory(guess) {
   const li = document.createElement("li");
   li.textContent = guess;
   guessHistory.appendChild(li);
 }
-<script>
-  document.querySelectorAll('.category-buttons button').forEach(button => {
-    button.addEventListener('click', () => {
-      localStorage.setItem('category', button.dataset.category);
-      location.reload();
-    });
-  });
-</script>
