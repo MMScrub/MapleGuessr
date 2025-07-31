@@ -1,24 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MapleGuessr</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="game-container">
-    <h1>MapleGuessr</h1>
-    <p class="instructions">Guess the daily Maple item, NPC, or boss!</p>
+<div class="game-container">
+  <h1>MapleGuessr</h1>
+  <p class="instructions">Guess the daily Maple item, NPC, or boss!</p>
 
-    <input type="text" id="guess-input" placeholder="Enter your guess..." autocomplete="off" />
-    <button id="submit-btn">Submit</button>
+  <label for="category-select">Choose category:</label>
+  <select id="category-select">
+    <option value="item">Items</option>
+    <option value="npc">NPCs</option>
+    <option value="boss">Bosses</option>
+  </select>
 
-    <ul id="guess-history"></ul>
-    <p id="result"></p>
-  </div>
+  <input type="text" id="guess-input" placeholder="Enter your guess..." autocomplete="off" />
+  <button id="submit-btn">Submit</button>
 
-  <script src="data.js"></script>
-  <script src="script.js"></script>
-</body>
-</html>
+  <ul id="guess-history"></ul>
+  <p id="result"></p>
+</div>
