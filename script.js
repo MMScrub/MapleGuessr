@@ -52,3 +52,11 @@ function addGuessToHistory(guess) {
   li.textContent = guess;
   guessHistory.appendChild(li);
 }
+<script>
+  document.querySelectorAll('.category-buttons button').forEach(button => {
+    button.addEventListener('click', () => {
+      localStorage.setItem('category', button.dataset.category);
+      location.reload();
+    });
+  });
+</script>
