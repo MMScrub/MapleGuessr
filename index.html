@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>MapleGuessr</title>
 <style>
+
+  /* ===== UI & Layout Styling =====
+   This section defines the overall appearance for:
+   - Page background, fonts, and text colors
+   - Menu layout and button styles
+   - Game container and input styling
+   - Guess table formatting
+   - Feedback colors for guesses (green, yellow, red)
+   - Suggestions dropdown list
+*/
   body { font-family: Arial, sans-serif; background: #1a1a1a; color: #f0f0f0; text-align: center; padding: 20px; }
   h1 { cursor: pointer; color: #6d88ff; }
   .menu { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 50px; }
@@ -17,6 +27,9 @@
   table { width: 100%; border-collapse: collapse; margin-top: 15px; }
   th, td { padding: 8px; border: 1px solid #555; }
   th { background: #333; }
+  .green { background-color: #2e7d32; }
+  .yellow { background-color: #f9a825; }
+  .red { background-color: #c62828; }
   #suggestions { list-style: none; background: #2a2a2a; padding: 0; margin: 0 auto; width: 220px; border-radius: 4px; text-align: left; }
   #suggestions li { padding: 6px; cursor: pointer; }
   #suggestions li:hover { background-color: #444; }
@@ -55,7 +68,7 @@
         <th>Release</th>
         <th>Stackable</th>
         <th>Class Type</th>
-        <th>Untradable</th>
+        <th>Tradable</th>
         <th>Dropped By</th>
       </tr>
     </thead>
@@ -68,9 +81,10 @@
 <script>
 // ================= TEST DATA =================
 const items = [
-  { name: "Zakum Helmet", release: "v62", stackable: "No", classType: "Helmet", untradable: "Yes", droppedBy: "Zakum" },
-  { name: "Onyx Apple", release: "v62", stackable: "Yes", classType: "Consumable", untradable: "No", droppedBy: "Crimson Balrog" },
-  { name: "Stormcaster Gloves", release: "v62", stackable: "No", classType: "Gloves", untradable: "No", droppedBy: "Crimsonwood Keep Boss" }
+  { name: "Zakum Helmet", release: "v62", stackable: false, classType: "Helmet", tradable: false, droppedBy: "Zakum" },
+  { name: "Onyx Apple", release: "v62", stackable: true, classType: "Consumable", tradable: true, droppedBy: "Crimson Balrog" },
+  { name: "Stormcaster Gloves", release: "v62", stackable: false, classType: "Gloves", tradable: true, droppedBy: "Crimsonwood Keep Boss" },
+  { name: "Chaos Scroll 60%", release: "v62", stackable: true, classType: "Scroll", tradable: true, droppedBy: "Gachapon - Kerning" }
 ];
 
 // ================= MENU LOGIC =================
@@ -88,9 +102,15 @@ document.getElementById("title").addEventListener("click", () => {
 
 // ================= GAME FUNCTION =================
 function startGame(pool) {
+  const today = new Date().toDateString(); // reset daily
   const todayIndex = new Date().getDate() % pool.length;
-  const answer = pool[todayIndex].name.toLowerCase();
-  let guesses = JSON.parse(localStorage.getItem("guesses_items")) || [];
+  const answer = pool[todayIndex];
+  let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || { date: today, guesses: [] };
+
+  if (guessesData.date !== today) {
+    guessesData = { date: today, guesses: [] };
+    localStorage.setItem("guesses_items", JSON.stringify(guessesData));
+  }
 
   const guessInput = document.getElementById("guess-input");
   const submitBtn = document.getElementById("submit-btn");
@@ -99,20 +119,31 @@ function startGame(pool) {
   const suggestionBox = document.getElementById("suggestions");
 
   tableBody.innerHTML = "";
-  guesses.forEach(g => addGuessToTable(pool.find(i => i.name.toLowerCase() === g)));
+  guessesData.guesses.forEach(g => addGuessToTable(g));
 
   function addGuessToTable(item) {
     if (!item) return;
     const row = document.createElement("tr");
     row.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.release}</td>
-      <td>${item.stackable}</td>
-      <td>${item.classType}</td>
-      <td>${item.untradable}</td>
-      <td>${item.droppedBy}</td>
+      <td class="${item.name === answer.name ? 'green' : 'red'}">${item.name}</td>
+      <td class="${item.release === answer.release ? 'green' : 'red'}">${item.release}</td>
+      <td class="${item.stackable === answer.stackable ? 'green' : 'red'}">${item.stackable ? 'Yes' : 'No'}</td>
+      <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
+      <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
+      <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${item.droppedBy}</td>
     `;
     tableBody.appendChild(row);
+  }
+
+  function dropColor(guessDrop, answerDrop) {
+    if (guessDrop === answerDrop) return 'green';
+    const guessIsMob = !guessDrop.toLowerCase().includes("gachapon");
+    const answerIsMob = !answerDrop.toLowerCase().includes("gachapon");
+    if (guessIsMob && answerIsMob) return 'yellow';
+    const guessIsGach = guessDrop.toLowerCase().includes("gachapon");
+    const answerIsGach = answerDrop.toLowerCase().includes("gachapon");
+    if (guessIsGach && answerIsGach) return 'yellow';
+    return 'red';
   }
 
   guessInput.addEventListener("input", () => {
@@ -134,7 +165,7 @@ function startGame(pool) {
   submitBtn.addEventListener("click", () => {
     const userGuess = guessInput.value.trim().toLowerCase();
     if (!userGuess) return;
-    if (guesses.includes(userGuess)) {
+    if (guessesData.guesses.find(g => g.name.toLowerCase() === userGuess)) {
       alert("Already guessed that!");
       return;
     }
@@ -145,12 +176,12 @@ function startGame(pool) {
       return;
     }
 
-    guesses.push(userGuess);
-    localStorage.setItem("guesses_items", JSON.stringify(guesses));
+    guessesData.guesses.push(item);
+    localStorage.setItem("guesses_items", JSON.stringify(guessesData));
     addGuessToTable(item);
 
-    if (userGuess === answer) {
-      result.textContent = `🎉 Correct! You got it in ${guesses.length} guesses.`;
+    if (item.name.toLowerCase() === answer.name.toLowerCase()) {
+      result.textContent = `🎉 Correct! You got it in ${guessesData.guesses.length} guesses.`;
       result.style.color = "#6dff6d";
     } else {
       result.textContent = "❌ Not quite, try again.";
