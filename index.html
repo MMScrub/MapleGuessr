@@ -6,15 +6,17 @@
 <title>MapleGuessr</title>
 <style>
   body { font-family: Arial, sans-serif; background: #1a1a1a; color: #f0f0f0; text-align: center; padding: 20px; }
+  h1 { cursor: pointer; color: #6d88ff; }
   .menu { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 50px; }
   .menu button { padding: 14px 20px; font-size: 18px; border: none; border-radius: 8px; cursor: pointer; width: 200px; background-color: #444; color: white; }
   .menu button:hover { background-color: #666; }
   .wip { font-size: 12px; color: #aaa; margin-top: 4px; }
-  .game-container { display: none; max-width: 400px; margin: auto; }
+  .game-container { display: none; max-width: 800px; margin: auto; }
   input { padding: 8px; width: 200px; margin-top: 10px; border-radius: 6px; border: none; }
   button#submit-btn { padding: 8px 14px; margin-left: 5px; cursor: pointer; background: #6d88ff; border: none; border-radius: 6px; color: white; }
-  ul#guess-history { list-style: none; padding: 0; margin-top: 15px; }
-  ul#guess-history li { background: #333; padding: 6px; margin: 4px auto; border-radius: 4px; width: 250px; }
+  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+  th, td { padding: 8px; border: 1px solid #555; }
+  th { background: #333; }
   #suggestions { list-style: none; background: #2a2a2a; padding: 0; margin: 0 auto; width: 220px; border-radius: 4px; text-align: left; }
   #suggestions li { padding: 6px; cursor: pointer; }
   #suggestions li:hover { background-color: #444; }
@@ -22,7 +24,7 @@
 </head>
 <body>
 
-<h1>MapleGuessr</h1>
+<h1 id="title">MapleGuessr</h1>
 
 <!-- Main Menu -->
 <div id="menu" class="menu">
@@ -45,18 +47,30 @@
   <input type="text" id="guess-input" placeholder="Enter your guess..." autocomplete="off" />
   <ul id="suggestions"></ul>
   <button id="submit-btn">Submit</button>
-  <ul id="guess-history"></ul>
+
+  <table id="guess-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Release</th>
+        <th>Stackable</th>
+        <th>Class Type</th>
+        <th>Untradable</th>
+        <th>Dropped By</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
   <p id="result"></p>
 </div>
 
 <script>
-// ================= DATA =================
+// ================= TEST DATA =================
 const items = [
-  "Zakum Helmet","Maple Claw","Maple Skanda","Stonetooth Sword","Maple Soul Singer",
-  "Green Christmas Sock","Dark Scroll for Claw for ATT","Scroll for Overall for DEX",
-  "Scroll for Overall for INT","Scroll for Cape for LUK","Scroll for Earring for INT",
-  "Scroll for Shield for Magic Attack","Stormcaster Gloves","Work Gloves","Onyx Apple",
-  "Heartstopper","Warrior Elixir","Wizard Elixir"
+  { name: "Zakum Helmet", release: "v62", stackable: "No", classType: "Helmet", untradable: "Yes", droppedBy: "Zakum" },
+  { name: "Onyx Apple", release: "v62", stackable: "Yes", classType: "Consumable", untradable: "No", droppedBy: "Crimson Balrog" },
+  { name: "Stormcaster Gloves", release: "v62", stackable: "No", classType: "Gloves", untradable: "No", droppedBy: "Crimsonwood Keep Boss" }
 ];
 
 // ================= MENU LOGIC =================
@@ -66,37 +80,51 @@ document.getElementById("play-items").addEventListener("click", () => {
   startGame(items);
 });
 
+// Menu button via title
+document.getElementById("title").addEventListener("click", () => {
+  document.getElementById("menu").style.display = "flex";
+  document.getElementById("game").style.display = "none";
+});
+
 // ================= GAME FUNCTION =================
 function startGame(pool) {
   const todayIndex = new Date().getDate() % pool.length;
-  const answer = pool[todayIndex].toLowerCase();
+  const answer = pool[todayIndex].name.toLowerCase();
   let guesses = JSON.parse(localStorage.getItem("guesses_items")) || [];
 
   const guessInput = document.getElementById("guess-input");
   const submitBtn = document.getElementById("submit-btn");
-  const guessHistory = document.getElementById("guess-history");
+  const tableBody = document.querySelector("#guess-table tbody");
   const result = document.getElementById("result");
   const suggestionBox = document.getElementById("suggestions");
 
-  guessHistory.innerHTML = "";
-  guesses.forEach(g => addGuessToHistory(g));
+  tableBody.innerHTML = "";
+  guesses.forEach(g => addGuessToTable(pool.find(i => i.name.toLowerCase() === g)));
 
-  function addGuessToHistory(guess) {
-    const li = document.createElement("li");
-    li.textContent = guess;
-    guessHistory.appendChild(li);
+  function addGuessToTable(item) {
+    if (!item) return;
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${item.name}</td>
+      <td>${item.release}</td>
+      <td>${item.stackable}</td>
+      <td>${item.classType}</td>
+      <td>${item.untradable}</td>
+      <td>${item.droppedBy}</td>
+    `;
+    tableBody.appendChild(row);
   }
 
   guessInput.addEventListener("input", () => {
     const val = guessInput.value.trim().toLowerCase();
     suggestionBox.innerHTML = "";
     if (!val) return;
-    const matches = pool.filter(e => e.toLowerCase().includes(val));
+    const matches = pool.filter(e => e.name.toLowerCase().includes(val));
     matches.slice(0, 8).forEach(match => {
       const li = document.createElement("li");
-      li.textContent = match;
+      li.textContent = match.name;
       li.onclick = () => {
-        guessInput.value = match;
+        guessInput.value = match.name;
         suggestionBox.innerHTML = "";
       };
       suggestionBox.appendChild(li);
@@ -110,9 +138,16 @@ function startGame(pool) {
       alert("Already guessed that!");
       return;
     }
+
+    const item = pool.find(i => i.name.toLowerCase() === userGuess);
+    if (!item) {
+      alert("Item not found in database.");
+      return;
+    }
+
     guesses.push(userGuess);
     localStorage.setItem("guesses_items", JSON.stringify(guesses));
-    addGuessToHistory(userGuess);
+    addGuessToTable(item);
 
     if (userGuess === answer) {
       result.textContent = `🎉 Correct! You got it in ${guesses.length} guesses.`;
