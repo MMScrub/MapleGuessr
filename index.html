@@ -2,74 +2,73 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MapleGuessr v0.2.3 (Early Access)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MapleGuessr v0.2.4 (Early Access)</title>
 <style>
-   
-/* ===== UI & Layout Styling (v0.2.3 bundled) ===== */
-body { font-family: Arial, sans-serif; background: #1a1a1a; color: #f0f0f0; text-align: center; padding: 20px; }
-h1 { cursor: pointer; color: #6d88ff; margin-bottom: 8px; }
-.dev-row { margin-bottom: 12px; }
-.dev-row button { margin: 0 4px 6px 4px; background:#444; color:white; padding:6px 12px; border:none; border-radius:4px; cursor:pointer; }
+/* ===== UI & Layout Styling ===== */
+body { font-family: Arial, sans-serif; background:#1a1a1a; color:#f0f0f0; text-align:center; padding:20px; }
+h1 { cursor:pointer; color:#6d88ff; margin-bottom:8px; }
+
+.dev-row { margin-bottom:12px; }
+.dev-row button { margin:0 4px 6px 4px; background:#444; color:white; padding:6px 12px; border:none; border-radius:4px; cursor:pointer; }
 #reset-btn { background:#aa4444; }
 #random-btn { background:#4466aa; }
 #daily-btn  { background:#4a7a4a; }
 #next-btn   { background:#6d5499; }
 #reveal-btn { background:#777; }
-.mode-indicator { margin: 8px 0 6px; font-size: 14px; opacity: 0.9; }
+
+.mode-indicator { margin:8px 0 6px; font-size:14px; opacity:.9; }
 .mode-indicator .daily { color:#62d26f; }
 .mode-indicator .random { color:#f0c36a; }
-.counter { margin: 4px 0 10px; font-size: 14px; opacity: 0.9; }
+.counter { margin:4px 0 10px; font-size:14px; opacity:.9; }
 
-.menu { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 26px; }
-.menu button { padding: 14px 20px; font-size: 18px; border: none; border-radius: 8px; cursor: pointer; width: 200px; background-color: #444; color: white; }
-.menu button:hover { background-color: #666; }
-.wip { font-size: 12px; color: #aaa; margin-top: 4px; }
-.game-container { display: none; max-width: 980px; margin: 0 auto; }
+.menu { display:flex; flex-direction:column; align-items:center; gap:15px; margin-top:26px; }
+.menu button { padding:14px 20px; font-size:18px; border:none; border-radius:8px; cursor:pointer; width:200px; background:#444; color:white; }
+.menu button:hover { background:#666; }
+.wip { font-size:12px; color:#aaa; margin-top:4px; }
+.game-container { display:none; max-width:980px; margin:0 auto; }
 
-input { padding: 8px; width: 260px; margin-top: 10px; border-radius: 6px; border: none; }
-button#submit-btn { padding: 8px 14px; ; margin-left: 5px; margin-top: 2px; cursor: pointer; background: #6d88ff; border: none; border-radius: 6px; color: white; }
+input { padding:8px; width:260px; margin-top:10px; border-radius:6px; border:none; }
+button#submit-btn { padding:8px 14px; margin-left:5px; margin-top:2px; cursor:pointer; background:#6d88ff; border:none; border-radius:6px; color:white; }
 
-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-th, td { padding: 8px; border: 1px solid #555; }
-th { background: #333; }
-.green { background-color: #2e7d32; }
-.yellow { background-color: #f9a825; }
-.red { background-color: #c62828; }
-.answer-row td {
-  border: 2px solid #6dff6d !important;
-}
-.answer-row td + td {
-  border-left: none !important;
-}
-.answer-row td:last-child {
-  border-right: 2px solid #6dff6d !important;
-}
-#suggestions { list-style: none; background: #2a2a2a; padding: 0; margin: 0 auto; width: 260px; border-radius: 4px; text-align: left; }
-#suggestions li { padding: 6px; cursor: pointer; }
-#suggestions li:hover { background-color: #444; }
+table { width:100%; border-collapse:collapse; margin-top:15px; }
+th, td { padding:8px; border:1px solid #555; }
+th { background:#333; }
+.green { background:#2e7d32; }
+.yellow { background:#f9a825; }
+.red { background:#c62828; }
+
+/* Correct row: single clean green box */
+.answer-row { font-weight:bold; }
+.answer-row td { border:2px solid #6dff6d !important; }
+.answer-row td + td { border-left:none !important; }
+.answer-row td:last-child { border-right:2px solid #6dff6d !important; }
+
+#suggestions { list-style:none; background:#2a2a2a; padding:0; margin:0 auto; width:260px; border-radius:4px; text-align:left; }
+#suggestions li { padding:6px; cursor:pointer; }
+#suggestions li:hover { background:#444; }
 
 /* Collapsible How to Play */
-.howto { margin-top: 20px; text-align: left; background: #2a2a2a; border-radius: 6px; overflow: hidden; }
-.howto-header { padding: 10px; cursor: pointer; font-weight: bold; background: #333; }
-.howto-content { display: none; padding: 10px; font-size: 14px; }
+.howto { margin-top:20px; text-align:left; background:#2a2a2a; border-radius:6px; overflow:hidden; }
+.howto-header { padding:10px; cursor:pointer; font-weight:bold; background:#333; }
+.howto-content { display:none; padding:10px; font-size:14px; }
 
 /* Source badges */
-.badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-right: 6px; background:#444; }
+.badge { display:inline-block; padding:2px 6px; border-radius:4px; font-size:12px; margin-right:6px; background:#444; }
 .badge.pq { background:#2b5fff; }     /* PQ blue */
 .badge.gach { background:#7b3fe4; }   /* Gach purple */
 .badge.quest { background:#8a5a2b; }  /* Quest brown */
 .badge.mob { background:#555; }       /* Mob gray */
 
 /* Name highlight */
-.name-partial b { color: #fff; }
+.name-partial b { color:#fff; }
 </style>
 </head>
 <body>
 
 <h1 id="title">MapleGuessr</h1>
 
-<!-- Dev tools row -->
+<!-- Dev tools -->
 <div class="dev-row">
   <button id="reset-btn">Reset Game (Dev)</button>
   <button id="random-btn">Random Answer (Dev)</button>
@@ -78,25 +77,25 @@ th { background: #333; }
   <button id="reveal-btn">Reveal Answer (Dev)</button>
 </div>
 
-<!-- Main Menu -->
+<!-- Menu -->
 <div id="menu" class="menu">
   <div><button id="play-items">Items</button></div>
   <div><button disabled>NPCs</button><div class="wip">(WIP)</div></div>
   <div><button disabled>Bosses</button><div class="wip">(WIP)</div></div>
 </div>
 
-<!-- Game Screen -->
+<!-- Game -->
 <div id="game" class="game-container">
   <h2 id="game-title">Items</h2>
 
   <div id="mode" class="mode-indicator"></div>
   <div id="guess-counter" class="counter"></div>
 
-  <input type="text" id="guess-input" placeholder="Enter your guess..." autocomplete="off" />
+  <input type="text" id="guess-input" placeholder="Enter your guess..." autocomplete="off"/>
   <ul id="suggestions"></ul>
   <button id="submit-btn">Submit</button>
 
-  <div id="reveal" style="margin-top:8px; font-size:13px; opacity:0.9;"></div>
+  <div id="reveal" style="margin-top:8px; font-size:13px; opacity:.9;"></div>
 
   <table id="guess-table">
     <thead>
@@ -114,82 +113,84 @@ th { background: #333; }
 
   <p id="result"></p>
 
-  <!-- How to Play (Collapsible) -->
+  <!-- How to Play -->
   <div class="howto">
     <div class="howto-header" id="howto-toggle">How to Play +</div>
     <div class="howto-content" id="howto-content">
       <p><strong>Goal:</strong> Guess the hidden MapleLegends item of the day.</p>
       <p><strong>Colors:</strong></p>
       <ul>
-        <li>Green = Exact match</li>
-        <li>Yellow = Partial match (Equip Level ±5, same source type but different specific source)</li>
+        <li>Green = Exact/overlap match</li>
+        <li>Yellow = Close (Equip Level range within ±5, or same source type but different specific source)</li>
         <li>Red = No match</li>
       </ul>
-      <p><strong>Equip Level:</strong> ✓ for exact, ↑ means the real item requires a higher level, ↓ means lower. “—” for non-equipables.</p>
-      <p><strong>Source badges:</strong> we show the type right in the cell:
+      <p><strong>Equip Level (Range):</strong>
+         ✓ when your range overlaps the answer’s range; ↑ means the answer’s range is higher; ↓ means lower; “—” for non‑equipables.</p>
+      <p><strong>Source badges:</strong>
         <span class="badge mob">[Mob]</span>
         <span class="badge pq">[PQ]</span>
         <span class="badge gach">[Gachapon]</span>
         <span class="badge quest">[Quest]</span>
-        (Quest includes crafting-style quests.)
+        (Quest includes crafting.)
       </p>
     </div>
   </div>
 </div>
 
 <script>
-// ===== Items Data (MapleLegends-aligned) =====
-const items = [
-  { name: "Zakum Helmet",      minLevel: 50,  maxLevel: 50,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Zakum" },
-  { name: "Onyx Apple",        minLevel: null,maxLevel: null,stackable: true,  classType: "Consumable",    tradable: true,  droppedBy: "Amoria PQ" },
-  { name: "Chaos Scroll 60%",  minLevel: null,maxLevel: null,stackable: true,  classType: "Scroll",        tradable: false, droppedBy: "Gachapon" },
-  { name: "Facestompers",      minLevel: 150, maxLevel: 150, stackable: false, classType: "Shoes",         tradable: true,  droppedBy: "PinkBean" },
-  { name: "White Scroll",      minLevel: null,maxLevel: null,stackable: true,  classType: "Scroll",        tradable: false, droppedBy: "Gachapon" },
-  { name: "Mark of Naricain",  minLevel: 110, maxLevel: 110, stackable: false, classType: "Pendant",       tradable: true,  droppedBy: "CWKPQ" },
-  { name: "Balanced Fury",     minLevel: 70,  maxLevel: 70,  stackable: true,  classType: "Throwing Star", tradable: true,  droppedBy: "Quest - Crafted" },
-  { name: "Ravana Helmet",     minLevel: 50,  maxLevel: 90,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Quest - Ravana" },
-  { name: "Crimson Arcglaive", minLevel: 100, maxLevel: 100, stackable: false, classType: "Spear",         tradable: true,  droppedBy: "Quest - Exchange" }
-];
+/* ================= Load data from /data/pool.json ================= */
+async function loadPoolData() {
+  const res = await fetch('data/pool.json');
+  if (!res.ok) throw new Error('Missing data/pool.json');
+  return res.json();
+}
 
-// ===== Dev Buttons =====
+/* ================= Dev Buttons ================= */
 document.getElementById("reset-btn").addEventListener("click", () => {
   localStorage.clear();
   location.reload();
 });
 document.getElementById("random-btn").addEventListener("click", () => {
-  const idx = Math.floor(Math.random() * items.length);
+  const idx = Math.floor(Math.random() * (window.__POOL__?.length || 1));
   localStorage.setItem("dev_force_index", String(idx));
-  localStorage.setItem("guesses_items", JSON.stringify({date: new Date().toDateString(), guesses: []}));
+  localStorage.setItem("guesses_items", JSON.stringify({ date: new Date().toDateString(), guesses: [] }));
   location.reload();
 });
 document.getElementById("daily-btn").addEventListener("click", () => {
   localStorage.removeItem("dev_force_index");
-  localStorage.setItem("guesses_items", JSON.stringify({date: new Date().toDateString(), guesses: []}));
+  localStorage.setItem("guesses_items", JSON.stringify({ date: new Date().toDateString(), guesses: [] }));
   location.reload();
 });
 document.getElementById("next-btn").addEventListener("click", () => {
+  const len = window.__POOL__?.length || 1;
   const current = parseInt(localStorage.getItem("dev_force_index") ?? "-1", 10);
-  const next = isNaN(current) ? 0 : (current + 1) % items.length;
+  const next = isNaN(current) ? 0 : (current + 1) % len;
   localStorage.setItem("dev_force_index", String(next));
-  localStorage.setItem("guesses_items", JSON.stringify({date: new Date().toDateString(), guesses: []}));
+  localStorage.setItem("guesses_items", JSON.stringify({ date: new Date().toDateString(), guesses: [] }));
   location.reload();
 });
 document.getElementById("reveal-btn").addEventListener("click", () => {
-  const ans = getAnswerFromPool(items);
-  const r = document.getElementById("reveal");
-  r.textContent = `Answer (Dev): ${ans.name}`;
+  const ans = getAnswerFromPool(window.__POOL__ || []);
+  document.getElementById("reveal").textContent = `Answer (Dev): ${ans?.name || '—'}`;
 });
 
-// ===== Menu + How-to =====
-document.getElementById("play-items").addEventListener("click", () => {
+/* ================= Menu + How-to ================= */
+document.getElementById("play-items").addEventListener("click", async () => {
   document.getElementById("menu").style.display = "none";
   document.getElementById("game").style.display = "block";
-  startGame(items);
+
+  const pool = await loadPoolData();
+  window.__POOL__ = pool;             // keep globally for dev tools
+  window.__SUGGEST_INDEX__ = pool;    // same list for autocomplete now
+
+  startGame(pool);
 });
+
 document.getElementById("title").addEventListener("click", () => {
   document.getElementById("menu").style.display = "flex";
   document.getElementById("game").style.display = "none";
 });
+
 document.getElementById("howto-toggle").addEventListener("click", () => {
   const content = document.getElementById("howto-content");
   const toggle = document.getElementById("howto-toggle");
@@ -197,7 +198,7 @@ document.getElementById("howto-toggle").addEventListener("click", () => {
   else { content.style.display = "block"; toggle.textContent = "How to Play –"; }
 });
 
-// ===== Answer selection =====
+/* ================= Answer selection ================= */
 function getAnswerFromPool(pool) {
   const forced = localStorage.getItem("dev_force_index");
   if (forced !== null) {
@@ -211,7 +212,7 @@ function isRandomMode() {
   return localStorage.getItem("dev_force_index") !== null;
 }
 
-// ===== Helpers for feedback & badges =====
+/* ================= Helpers: badges, names, ranges ================= */
 function getDropType(src) {
   const s = (src || "").toLowerCase();
   if (s.includes("gachapon")) return "gachapon";
@@ -223,15 +224,15 @@ function formatSourceWithBadge(src) {
   const t = getDropType(src);
   const cls = t === "pq" ? "pq" : t === "gachapon" ? "gach" : t === "quest" ? "quest" : "mob";
   const label = t === "pq" ? "[PQ]" : t === "gachapon" ? "[Gachapon]" : t === "quest" ? "[Quest]" : "[Mob]";
-  return `<span class="badge ${cls}">${label}</span>${src}`;
+  return `<span class="badge ${cls}">${label}</span>${src || ''}`;
 }
-function dropColor(guessDrop, answerDrop) {
-  if (guessDrop === answerDrop) return 'green';
-  const gType = getDropType(guessDrop);
-  const aType = getDropType(answerDrop);
-  if (gType === aType) return 'yellow'; // same type, different specific source
-  return 'red';
+function highlightName(guessName, answerName) {
+  const g = guessName.split(/\s+/).map(s => s.toLowerCase());
+  const aSet = new Set(answerName.split(/\s+/).map(s => s.toLowerCase()));
+  return guessName.split(/\s+/).map(w => aSet.has(w.toLowerCase()) ? `<b>${w}</b>` : w).join(' ');
 }
+
+/* Range helpers */
 function bothNull(aMin, aMax, bMin, bMax) {
   return aMin == null && aMax == null && bMin == null && bMax == null;
 }
@@ -248,7 +249,6 @@ function rangeGap(gMin, gMax, aMin, aMax) {
   if (gMax < aMin) return aMin - gMax;   // guess below answer
   return gMin - aMax;                     // guess above answer
 }
-
 // Color logic: green = overlap; yellow = gap ≤ 5; red = far/no data
 function levelColor(gMin, gMax, aMin, aMax) {
   if (bothNull(gMin, gMax, aMin, aMax)) return 'green';
@@ -256,33 +256,18 @@ function levelColor(gMin, gMax, aMin, aMax) {
   if (rangesOverlap(gMin, gMax, aMin, aMax)) return 'green';
   return rangeGap(gMin, gMax, aMin, aMax) <= 5 ? 'yellow' : 'red';
 }
-
 // Display: "—" for non-equipables; "min–max" or single; add ✓ / ↑ / ↓
 function levelDisplay(gMin, gMax, aMin, aMax) {
   if (gMin == null || gMax == null) return "—";
   const text = (gMin === gMax) ? `${gMax}` : `${gMin}–${gMax}`;
-  if (aMin == null || aMax == null) return text; // answer isn't equipable
+  if (aMin == null || aMax == null) return text; // answer not equipable
   if (rangesOverlap(gMin, gMax, aMin, aMax)) return `${text} ✓`;
   if (gMax < aMin) return `${text} ↑`; // need higher
   if (gMin > aMax) return `${text} ↓`; // need lower
-  return text; // (shouldn't reach if we covered overlap)
-}
-   
-function equipLevelDisplay(guess, correct) {
-  if (guess == null) return "—";
-  if (correct == null) return String(guess); // if answer not equipable, no arrow
-  if (guess === correct) return `${guess} ✓`;
-  return guess + (guess < correct ? " ↑" : " ↓");
-}
-   
-// Bold shared words between guess name and answer name
-function highlightName(guessName, answerName) {
-  const g = guessName.split(/\s+/).map(s => s.toLowerCase());
-  const aSet = new Set(answerName.split(/\s+/).map(s => s.toLowerCase()));
-  return guessName.split(/\s+/).map(w => aSet.has(w.toLowerCase()) ? `<b>${w}</b>` : w).join(' ');
+  return text;
 }
 
-// ===== Game Logic =====
+/* ================= Game Logic ================= */
 function startGame(pool) {
   const modeEl = document.getElementById("mode");
   modeEl.innerHTML = isRandomMode()
@@ -292,7 +277,7 @@ function startGame(pool) {
   const answer = getAnswerFromPool(pool);
   const today = new Date().toDateString();
 
-  // daily-ish structure; guesses stored per day
+  // per-day guesses (kept even with random mode toggle)
   let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || { date: today, guesses: [] };
   if (guessesData.date !== today && !isRandomMode()) {
     guessesData = { date: today, guesses: [] };
@@ -311,7 +296,7 @@ function startGame(pool) {
   guessInput.focus();
 
   // render prior guesses
-  guessesData.guesses.forEach(g => addGuessToTable(g));
+  (guessesData.guesses || []).forEach(g => addGuessToTable(g));
 
   function updateCounter() {
     counterEl.textContent = `Guess #${(guessesData.guesses?.length || 0) + 1}`;
@@ -322,7 +307,7 @@ function startGame(pool) {
     if (item.name === answer.name) row.classList.add("answer-row");
     row.innerHTML = `
       <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
-      <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}"> ${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
+      <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
       <td class="${item.stackable === answer.stackable ? 'green' : 'red'}">${item.stackable ? 'Yes' : 'No'}</td>
       <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
       <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
@@ -331,12 +316,22 @@ function startGame(pool) {
     tableBody.appendChild(row);
   }
 
-  // Suggestions
+  function dropColor(guessDrop, answerDrop) {
+    if ((guessDrop || "") === (answerDrop || "")) return 'green';
+    const gType = getDropType(guessDrop);
+    const aType = getDropType(answerDrop);
+    if (gType === aType) return 'yellow'; // same type, different specific source
+    return 'red';
+  }
+
+  // Suggestions (use the same pool for now)
   guessInput.addEventListener("input", () => {
     const val = guessInput.value.trim().toLowerCase();
     suggestionBox.innerHTML = "";
     if (!val) return;
-    const matches = pool.filter(e => e.name.toLowerCase().includes(val));
+
+    const src = window.__SUGGEST_INDEX__ || pool;
+    const matches = src.filter(e => e.name.toLowerCase().includes(val));
     matches.slice(0, 8).forEach(match => {
       const li = document.createElement("li");
       li.textContent = match.name;
@@ -348,19 +343,19 @@ function startGame(pool) {
     });
   });
 
-  // Submit Guess
+  // Submit guess
   submitBtn.addEventListener("click", () => {
     const userGuess = guessInput.value.trim().toLowerCase();
     if (!userGuess) return;
 
-    if (guessesData.guesses.find(g => g.name.toLowerCase() === userGuess)) {
+    if ((guessesData.guesses || []).find(g => g.name.toLowerCase() === userGuess)) {
       alert("Already guessed that!");
       guessInput.focus();
       return;
     }
     const item = pool.find(i => i.name.toLowerCase() === userGuess);
     if (!item) {
-      alert("Item not found in database.");
+      alert("Item not found in pool.");
       guessInput.focus();
       return;
     }
