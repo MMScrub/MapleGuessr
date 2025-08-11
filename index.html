@@ -3,10 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MapleGuessr v0.2.2 (Early Access)</title>
+<title>MapleGuessr v0.2.3 (Early Access)</title>
 <style>
-/* ===== UI & Layout Styling ===== */
-  
+/* ===== UI & Layout Styling =====
+   v0.2.3
+   - Added [Quest] badge (covers quests + crafting)
+   - Data updated for MapleLegends accuracy
+   - Temp dev reset enabled via localStorage.clear()
+*/
 body { font-family: Arial, sans-serif; background: #1a1a1a; color: #f0f0f0; text-align: center; padding: 20px; }
 h1 { cursor: pointer; color: #6d88ff; }
 .menu { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 50px; }
@@ -30,12 +34,16 @@ th { background: #333; }
 .howto { margin-top: 20px; text-align: left; background: #2a2a2a; border-radius: 6px; overflow: hidden; }
 .howto-header { padding: 10px; cursor: pointer; font-weight: bold; background: #333; }
 .howto-content { display: none; padding: 10px; font-size: 14px; }
+/* Source badge */
 .badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-right: 6px; background:#444; }
 </style>
 </head>
 <body>
 
 <h1 id="title">MapleGuessr</h1>
+<button id="reset-btn" style="margin-bottom:10px; background:#aa4444; color:white; padding:6px 12px; border:none; border-radius:4px; cursor:pointer;">
+  Reset Game (Dev)
+</button>
 
 <!-- Main Menu -->
 <div id="menu" class="menu">
@@ -74,34 +82,41 @@ th { background: #333; }
       <p><strong>Goal:</strong> Guess the hidden MapleLegends item of the day.</p>
       <p><strong>Colors:</strong></p>
       <ul>
-        <li>🟩 Green = Exact match</li>
-        <li>🟨 Yellow = Partial match (Equip Level ±5, same <em>source type</em> but different specific source)</li>
-        <li>🟥 Red = No match</li>
+        <li>Green = Exact match</li>
+        <li>Yellow = Partial match (Equip Level ±5, same source type but different specific source)</li>
+        <li>Red = No match</li>
       </ul>
       <p><strong>Equip Level:</strong> ↑ means the real item requires a higher level, ↓ means lower. “—” for non-equipables.</p>
-      <p><strong>Source badges:</strong> We show the source type right in the cell:
+      <p><strong>Source badges:</strong> we show the type right in the cell:
         <span class="badge">[Mob]</span>
         <span class="badge">[Gachapon]</span>
         <span class="badge">[PQ]</span>
+        <span class="badge">[Quest]</span>
+        (Quest includes crafting-style quests.)
       </p>
     </div>
   </div>
 </div>
 
 <script>
-// ===== Items Data (v0.2.2) =====
-  
-  localStorage.clear(); // TEMP: clear all game data each load for testing
+// ===== DEV RESET BUTTON =====
+document.getElementById("reset-btn").addEventListener("click", () => {
+  localStorage.clear();
+  location.reload();
+});
+
+// ===== Items Data (v0.2.3) =====
+// Balanced Fury = Quest (crafted). Ravana Helmet = Quest - Ravana. Gach cities simplified where needed.
 const items = [
-  { name: "Zakum Helmet", equipLevel: 50, stackable: false, classType: "Helmet", tradable: false, droppedBy: "Zakum" },
-  { name: "Onyx Apple", equipLevel: null, stackable: true, classType: "Consumable", tradable: true, droppedBy: "Amoria PQ" },
-  { name: "Chaos Scroll 60%", equipLevel: null, stackable: true, classType: "Scroll", tradable: false, droppedBy: "Gachapon - Kerning" },
-  { name: "Facestompers", equipLevel: 50, stackable: false, classType: "Shoes", tradable: true, droppedBy: "Scarlion" },
-  { name: "White Scroll", equipLevel: null, stackable: true, classType: "Scroll", tradable: true, droppedBy: "Gachapon - Kerning" },
-  { name: "Mark of Naricain", equipLevel: 110, stackable: false, classType: "Pendant", tradable: true, droppedBy: "CWKPQ" },
-  { name: "Balanced Fury", equipLevel: null, stackable: true, classType: "Throwing Star", tradable: true, droppedBy: "Gachapon - Perion" },
-  { name: "Ravana Helmet", equipLevel: 70, stackable: false, classType: "Helmet", tradable: false, droppedBy: "Ravana" },
-  { name: "Crimson Arcglaive", equipLevel: 100, stackable: false, classType: "Spear", tradable: true, droppedBy: "Gachapon - Perion" }
+  { name: "Zakum Helmet",      equipLevel: 50,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Zakum" },
+  { name: "Onyx Apple",        equipLevel: null,stackable: true,  classType: "Consumable",    tradable: true,  droppedBy: "Amoria PQ" },
+  { name: "Chaos Scroll 60%",  equipLevel: null,stackable: true,  classType: "Scroll",        tradable: false, droppedBy: "Gachapon" },
+  { name: "Facestompers",      equipLevel: 50,  stackable: false, classType: "Shoes",         tradable: true,  droppedBy: "PinkBean" },
+  { name: "White Scroll",      equipLevel: null,stackable: true,  classType: "Scroll",        tradable: false, droppedBy: "Gachapon" },
+  { name: "Mark of Naricain",  equipLevel: 110, stackable: false, classType: "Pendant",       tradable: true,  droppedBy: "CWKPQ" },
+  { name: "Balanced Fury",     equipLevel: null,stackable: true,  classType: "Throwing Star", tradable: true,  droppedBy: "Quest - Crafted" },
+  { name: "Ravana Helmet",     equipLevel: 70,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Quest - Ravana" },
+  { name: "Crimson Arcglaive", equipLevel: 100, stackable: false, classType: "Spear",         tradable: true,  droppedBy: "Gachapon - Perion" }
 ];
 
 // ===== Menu Logic =====
@@ -128,23 +143,28 @@ document.getElementById("howto-toggle").addEventListener("click", () => {
   }
 });
 
-// ===== Helpers for feedback =====
+// ===== Helpers for feedback & badges =====
 function getDropType(src) {
   const s = (src || "").toLowerCase();
   if (s.includes("gachapon")) return "gachapon";
-  if (s.includes("pq")) return "pq";
-  return "mob"; // default: boss/mob
+  if (s.includes("pq"))       return "pq";
+  if (s.includes("quest"))    return "quest";
+  return "mob"; // default: mob/boss
 }
 function formatSourceWithBadge(src) {
   const t = getDropType(src);
-  const label = t === "pq" ? "[PQ]" : t === "gachapon" ? "[Gachapon]" : "[Mob]";
+  const label =
+    t === "pq"       ? "[PQ]" :
+    t === "gachapon" ? "[Gachapon]" :
+    t === "quest"    ? "[Quest]" :
+                       "[Mob]";
   return `<span class="badge">${label}</span>${src}`;
 }
 function dropColor(guessDrop, answerDrop) {
   if (guessDrop === answerDrop) return 'green';
   const gType = getDropType(guessDrop);
   const aType = getDropType(answerDrop);
-  if (gType === aType) return 'yellow';
+  if (gType === aType) return 'yellow'; // same type, different specific source
   return 'red';
 }
 function equipLevelColor(guess, correct) {
@@ -166,12 +186,8 @@ function startGame(pool) {
   const todayIndex = new Date().getDate() % pool.length;
   const answer = pool[todayIndex];
 
-  // daily reset for items category
-  let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || { date: today, guesses: [] };
-  if (guessesData.date !== today) {
-    guessesData = { date: today, guesses: [] };
-    localStorage.setItem("guesses_items", JSON.stringify(guessesData));
-  }
+  // (daily structure still present even though we clear for dev)
+  let guessesData = { date: today, guesses: [] };
 
   const guessInput = document.getElementById("guess-input");
   const submitBtn = document.getElementById("submit-btn");
@@ -180,7 +196,7 @@ function startGame(pool) {
   const suggestionBox = document.getElementById("suggestions");
 
   tableBody.innerHTML = "";
-  guessesData.guesses.forEach(g => addGuessToTable(g));
+  guessInput.focus();
 
   function addGuessToTable(item) {
     const row = document.createElement("tr");
@@ -231,14 +247,13 @@ function startGame(pool) {
     }
 
     guessesData.guesses.push(item);
-    localStorage.setItem("guesses_items", JSON.stringify(guessesData));
     addGuessToTable(item);
 
     if (item.name.toLowerCase() === answer.name.toLowerCase()) {
-      result.textContent = `🎉 Correct! You got it in ${guessesData.guesses.length} guesses.`;
+      result.textContent = `Correct! You got it in ${guessesData.guesses.length} guesses.`;
       result.style.color = "#6dff6d";
     } else {
-      result.textContent = "❌ Not quite, try again.";
+      result.textContent = "Not quite, try again.";
       result.style.color = "#ff7a7a";
     }
 
