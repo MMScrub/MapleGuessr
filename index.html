@@ -59,6 +59,7 @@ th { background:#333; }
 .badge.gach { background:#7b3fe4; }   /* Gach purple */
 .badge.quest { background:#8a5a2b; }  /* Quest brown */
 .badge.mob { background:#555; }       /* Mob gray */
+.badge.store { background:#2aa198; }  /* teal */
 
 /* Name highlight */
 .name-partial b { color:#fff; }
@@ -131,7 +132,8 @@ th { background:#333; }
         <span class="badge pq">[PQ]</span>
         <span class="badge gach">[Gachapon]</span>
         <span class="badge quest">[Quest]</span>
-        (Quest includes crafting.)
+        <span class="badge store">[Store]</span>
+        (Quest includes crafting; Store means NPC shops.)
       </p>
     </div>
   </div>
@@ -213,19 +215,31 @@ function isRandomMode() {
 }
 
 /* ================= Helpers: badges, names, ranges ================= */
+  
 function getDropType(src) {
-  const s = (src || "").toLowerCase();
-  if (s.includes("gachapon")) return "gachapon";
-  if (s.includes("pq"))       return "pq";
-  if (s.includes("quest"))    return "quest";
-  return "mob"; // mob/boss
+  const s = (src || "").toLowerCase().trim();
+  if (!s) return "mob";
+  if (s.includes("gach"))                     return "gachapon";
+  if (s.includes("pq"))                       return "pq";
+  if (s.includes("quest"))                    return "quest";
+  // Treat NPC shop purchases as Store (exclude cash/nx)
+  if (s.includes("store") || (s.includes("shop") && !s.includes("cash") && !s.includes("nx")))
+                                              return "store";
+  return "mob"; // default mob/boss
 }
 function formatSourceWithBadge(src) {
   const t = getDropType(src);
-  const cls = t === "pq" ? "pq" : t === "gachapon" ? "gach" : t === "quest" ? "quest" : "mob";
-  const label = t === "pq" ? "[PQ]" : t === "gachapon" ? "[Gachapon]" : t === "quest" ? "[Quest]" : "[Mob]";
-  return `<span class="badge ${cls}">${label}</span>${src || ''}`;
+  const map = {
+    pq:       { cls: "pq",    label: "[PQ]" },
+    gachapon: { cls: "gach",  label: "[Gachapon]" },
+    quest:    { cls: "quest", label: "[Quest]" },
+    store:    { cls: "store", label: "[Store]" },
+    mob:      { cls: "mob",   label: "[Mob]" }
+  };
+  const entry = map[t] || map.mob;
+  return `<span class="badge ${entry.cls}">${entry.label}</span>${src || ''}`;
 }
+  
 function highlightName(guessName, answerName) {
   const g = guessName.split(/\s+/).map(s => s.toLowerCase());
   const aSet = new Set(answerName.split(/\s+/).map(s => s.toLowerCase()));
