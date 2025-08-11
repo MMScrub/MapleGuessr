@@ -138,9 +138,15 @@ th { background:#333; }
 </div>
 
 <script>
-/* ================= Load data from /data/pool.json ================= */
+/* ================= Global error helper (optional, shows issues fast) ================= */
+window.addEventListener('error', e => {
+  const r = document.getElementById('result');
+  if (r) { r.style.color = '#ff7a7a'; r.textContent = '⚠️ ' + (e.error?.message || e.message); }
+});
+
+/* ================= Load data from /data/pool.json (with cache-bust) ================= */
 async function loadPoolData() {
-  const res = await fetch('data/pool.json');
+  const res = await fetch('data/pool.json?cache=' + Date.now());
   if (!res.ok) throw new Error('Missing data/pool.json');
   return res.json();
 }
@@ -212,38 +218,49 @@ function isRandomMode() {
   return localStorage.getItem("dev_force_index") !== null;
 }
 
-/* ================= Helpers: badges, names, ranges ================= */
+/* ================= Helpers: badges, names, ranges (array-safe) ================= */
 function getDropType(src) {
-  const s = (src || "").toLowerCase();
-  if (s.includes("gachapon")) return "gachapon";
-  if (s.includes("pq"))       return "pq";
-  if (s.includes("quest"))    return "quest";
+  // accept string or array; use first entry to determine type
+  const s = Array.isArray(src) ? (src[0] || "") : (src || "");
+  const t = s.toLowerCase();
+  if (t.includes("gachapon")) return "gachapon";
+  if (t.includes("pq"))       return "pq";
+  if (t.includes("quest"))    return "quest";
   return "mob"; // mob/boss
 }
-function formatSourceWithBadge(src) {
+function formatOneSource(src) {
   const t = getDropType(src);
   const cls = t === "pq" ? "pq" : t === "gachapon" ? "gach" : t === "quest" ? "quest" : "mob";
   const label = t === "pq" ? "[PQ]" : t === "gachapon" ? "[Gachapon]" : t === "quest" ? "[Quest]" : "[Mob]";
   return `<span class="badge ${cls}">${label}</span>${src || ''}`;
 }
+// String OR array; show first + "(+N more)" with tooltip of full list
+function formatSourceWithBadge(src) {
+  const list = Array.isArray(src) ? src : (src ? [src] : []);
+  if (!list.length) return "";
+  const first = formatOneSource(list[0]);
+  const moreCount = list.length - 1;
+  const more = moreCount > 0 ? ` <span style="opacity:.85;">(+${moreCount} more)</span>` : "";
+  const title = list.join(", ");
+  return `<span title="${title}">${first}${more}</span>`;
+}
+// GREEN if any exact source matches; YELLOW if any type matches; else RED
+function dropColor(guessDrop, answerDrop) {
+  const gList = Array.isArray(guessDrop) ? guessDrop : (guessDrop ? [guessDrop] : []);
+  const aList = Array.isArray(answerDrop) ? answerDrop : (answerDrop ? [answerDrop] : []);
+  for (const g of gList) for (const a of aList) { if ((g || "") === (a || "")) return "green"; }
+  for (const g of gList) for (const a of aList) { if (getDropType(g) === getDropType(a)) return "yellow"; }
+  return "red";
+}
 function highlightName(guessName, answerName) {
-  const g = guessName.split(/\s+/).map(s => s.toLowerCase());
   const aSet = new Set(answerName.split(/\s+/).map(s => s.toLowerCase()));
   return guessName.split(/\s+/).map(w => aSet.has(w.toLowerCase()) ? `<b>${w}</b>` : w).join(' ');
 }
 
 /* Range helpers */
-function bothNull(aMin, aMax, bMin, bMax) {
-  return aMin == null && aMax == null && bMin == null && bMax == null;
-}
-function anyNull(aMin, aMax, bMin, bMax) {
-  const aNull = (aMin == null || aMax == null);
-  const bNull = (bMin == null || bMax == null);
-  return aNull || bNull;
-}
-function rangesOverlap(gMin, gMax, aMin, aMax) {
-  return !(gMax < aMin || aMax < gMin);
-}
+function bothNull(aMin, aMax, bMin, bMax) { return aMin == null && aMax == null && bMin == null && bMax == null; }
+function anyNull(aMin, aMax, bMin, bMax) { return (aMin == null || aMax == null) || (bMin == null || bMax == null); }
+function rangesOverlap(gMin, gMax, aMin, aMax) { return !(gMax < aMin || aMax < gMin); }
 function rangeGap(gMin, gMax, aMin, aMax) {
   if (rangesOverlap(gMin, gMax, aMin, aMax)) return 0;
   if (gMax < aMin) return aMin - gMax;   // guess below answer
@@ -314,14 +331,6 @@ function startGame(pool) {
       <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
     `;
     tableBody.appendChild(row);
-  }
-
-  function dropColor(guessDrop, answerDrop) {
-    if ((guessDrop || "") === (answerDrop || "")) return 'green';
-    const gType = getDropType(guessDrop);
-    const aType = getDropType(answerDrop);
-    if (gType === aType) return 'yellow'; // same type, different specific source
-    return 'red';
   }
 
   // Suggestions (use the same pool for now)
