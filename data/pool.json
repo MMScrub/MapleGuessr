@@ -15,4 +15,4 @@
 
   { name: "White Scroll", minLevel: null, maxLevel: null, stackable: true, classType: "Scroll", tradable: false, droppedBy: "Gachapon" },
   { name: "Chaos Scroll 60%", minLevel: null, maxLevel: null, stackable: true, classType: "Scroll", tradable: false, droppedBy: "Gachapon" }
-];
+]
