@@ -1,11 +1,1811 @@
 [
-  { "name": "Zakum Helmet",      "minLevel": 50,  "maxLevel": 50,  "stackable": false, "classType": "Helmet",        "tradable": false, "droppedBy": "Zakum" },
-  { "name": "Onyx Apple",        "minLevel": null,"maxLevel": null,"stackable": true,  "classType": "Consumable",    "tradable": true,  "droppedBy": "Amoria PQ" },
-  { "name": "Chaos Scroll 60%",  "minLevel": null,"maxLevel": null,"stackable": true,  "classType": "Scroll",        "tradable": false, "droppedBy": "Gachapon" },
-  { "name": "Facestompers",      "minLevel": 150, "maxLevel": 150, "stackable": false, "classType": "Shoes",         "tradable": true,  "droppedBy": "PinkBean" },
-  { "name": "White Scroll",      "minLevel": null,"maxLevel": null,"stackable": true,  "classType": "Scroll",        "tradable": false, "droppedBy": "Gachapon" },
-  { "name": "Mark of Naricain",  "minLevel": 110, "maxLevel": 110, "stackable": false, "classType": "Pendant",       "tradable": false, "droppedBy": "CWKPQ" },
-  { "name": "Balanced Fury",     "minLevel": 70,  "maxLevel": 70,  "stackable": true,  "classType": "Throwing Star", "tradable": true,  "droppedBy": "Quest - Exchange" },
-  { "name": "Ravana Helmet",     "minLevel": 50,  "maxLevel": 90,  "stackable": false, "classType": "Helmet",        "tradable": false, "droppedBy": "Quest - Ravana" },
-  { "name": "Crimson Arcglaive", "minLevel": 100, "maxLevel": 100, "stackable": false, "classType": "Spear",         "tradable": true,  "droppedBy": "Quest - Exchange" }
+  {
+    "name": "Zakum Helmet",
+    "minLevel": 50,
+    "maxLevel": 50,
+    "stackable": false,
+    "classType": "Helmet",
+    "tradable": false,
+    "droppedBy": "Zakum"
+  },
+  {
+    "name": "Horntail Pendant",
+    "minLevel": 120,
+    "maxLevel": 120,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": false,
+    "droppedBy": "Horntail"
+  },
+  {
+    "name": "Horntail Earrings",
+    "minLevel": 120,
+    "maxLevel": 120,
+    "stackable": false,
+    "classType": "Earrings",
+    "tradable": false,
+    "droppedBy": "Horntail"
+  },
+  {
+    "name": "Mark of Naricain",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "Blackfist Cloak",
+    "minLevel": 100,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Taunt/Crimsonwood"
+  },
+  {
+    "name": "Krexel Helmet",
+    "minLevel": 100,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Helmet",
+    "tradable": true,
+    "droppedBy": "Krexel"
+  },
+  {
+    "name": "Ravana Helmet",
+    "minLevel": 50,
+    "maxLevel": 90,
+    "stackable": false,
+    "classType": "Helmet",
+    "tradable": false,
+    "droppedBy": "Quest - Ravana"
+  },
+  {
+    "name": "Scarlion Helmet",
+    "minLevel": 80,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Helmet",
+    "tradable": true,
+    "droppedBy": "Scarlion"
+  },
+  {
+    "name": "Targa Helmet",
+    "minLevel": 80,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Helmet",
+    "tradable": true,
+    "droppedBy": "Targa"
+  },
+  {
+    "name": "Aufheben Circlet",
+    "minLevel": 140,
+    "maxLevel": 140,
+    "stackable": false,
+    "classType": "Helmet",
+    "tradable": true,
+    "droppedBy": "Aufheben"
+  },
+  {
+    "name": "Time Traveler's Pocket Watch",
+    "minLevel": 120,
+    "maxLevel": 120,
+    "stackable": false,
+    "classType": "Pocket Item",
+    "tradable": false,
+    "droppedBy": "Pink Bean"
+  },
+  {
+    "name": "Facestompers",
+    "minLevel": 150,
+    "maxLevel": 150,
+    "stackable": false,
+    "classType": "Shoes",
+    "tradable": true,
+    "droppedBy": "Pink Bean"
+  },
+  {
+    "name": "Pink Bean Cup",
+    "minLevel": 150,
+    "maxLevel": 150,
+    "stackable": false,
+    "classType": "Medal",
+    "tradable": false,
+    "droppedBy": "Pink Bean"
+  },
+  {
+    "name": "Dragon Khanjar",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Shield",
+    "tradable": true,
+    "droppedBy": "Multi-Mobs: Nibelung, Core Blaze, Nameless Magic Monster, Dunas, AfterLord, Bergamot"
+  },
+  {
+    "name": "Dragon Claymore",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "2H Sword",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Dragon Shiner Bow",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Bow",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Dragon Slash Claw",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Knuckle",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Dragon Faltizan",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Claw",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Stonetooth Sword",
+    "minLevel": 100,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "2H Sword",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Sky Ski",
+    "minLevel": 85,
+    "maxLevel": 85,
+    "stackable": false,
+    "classType": "Spear",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "White Nisrock",
+    "minLevel": 100,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Bow",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Golden Nisrock",
+    "minLevel": 100,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Bow",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Crimson Arcanon",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Wand",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "Crimsonheart Cloak",
+    "minLevel": 90,
+    "maxLevel": 90,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Maple Magician Shield",
+    "minLevel": 20,
+    "maxLevel": 20,
+    "stackable": false,
+    "classType": "Shield",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Elemental Wand 6",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "Wand",
+    "tradable": true,
+    "droppedBy": "Horntail"
+  },
+  {
+    "name": "Elemental Wand 7",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "Wand",
+    "tradable": true,
+    "droppedBy": "Horntail"
+  },
+  {
+    "name": "Elemental Wand 8",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "Wand",
+    "tradable": true,
+    "droppedBy": "Horntail"
+  },
+  {
+    "name": "Elemental Wand 9",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "Wand",
+    "tradable": true,
+    "droppedBy": "Horntail"
+  },
+  {
+    "name": "Reverse Carabella",
+    "minLevel": 120,
+    "maxLevel": 120,
+    "stackable": false,
+    "classType": "1H Sword",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Reverse Allargando",
+    "minLevel": 120,
+    "maxLevel": 120,
+    "stackable": false,
+    "classType": "Staff",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Reverse Shinksang",
+    "minLevel": 120,
+    "maxLevel": 120,
+    "stackable": false,
+    "classType": "Claw",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Reverse Engaw",
+    "minLevel": 120,
+    "maxLevel": 120,
+    "stackable": false,
+    "classType": "Bow",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Timeless Nibleheim",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "1H Sword",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Timeless Enreal Tear",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "Staff",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Timeless Lampion",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "Claw",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Timeless Black Beauty",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "Bow",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Reverse Bellocce",
+    "minLevel": 120,
+    "maxLevel": 120,
+    "stackable": false,
+    "classType": "2H Sword",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Timeless Executioners",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "Knuckle",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Timeless Taragon",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "Spear",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Timeless Speargrave",
+    "minLevel": 130,
+    "maxLevel": 130,
+    "stackable": false,
+    "classType": "Spear",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Ravana Ring",
+    "minLevel": 50,
+    "maxLevel": 50,
+    "stackable": false,
+    "classType": "Ring",
+    "tradable": false,
+    "droppedBy": "Ravana"
+  },
+  {
+    "name": "Deputy Star",
+    "minLevel": 50,
+    "maxLevel": 50,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Ellin Forest Ring",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Ring",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Pendant of the Spirit",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "MoN Crimsonheart",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "Blackfist Cloak (Clean)",
+    "minLevel": 100,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "Scar/Targa Badge",
+    "minLevel": 90,
+    "maxLevel": 90,
+    "stackable": false,
+    "classType": "Medal",
+    "tradable": false,
+    "droppedBy": "Scarlion/Targa"
+  },
+  {
+    "name": "Aufheben Earrings",
+    "minLevel": 140,
+    "maxLevel": 140,
+    "stackable": false,
+    "classType": "Earrings",
+    "tradable": true,
+    "droppedBy": "Aufheben"
+  },
+  {
+    "name": "Krexel Necklace",
+    "minLevel": 100,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "Krexel"
+  },
+  {
+    "name": "Horntail Necklace (Egged)",
+    "minLevel": 120,
+    "maxLevel": 120,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": false,
+    "droppedBy": "Horntail"
+  },
+  {
+    "name": "Dragon Purple Sleeve",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Claw",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Dragon Carabella",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "1H Sword",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Dragon Wand",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Wand",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Dragon Staff",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Staff",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Dragon Khanjar (Clean)",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Shield",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Kentarus Bow",
+    "minLevel": 100,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Bow",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Crimson Arc Staff",
+    "minLevel": 100,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Staff",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Raven Ninja Claw",
+    "minLevel": 75,
+    "maxLevel": 75,
+    "stackable": false,
+    "classType": "Claw",
+    "tradable": true,
+    "droppedBy": "Quest - Raven"
+  },
+  {
+    "name": "Raven Horn Bow",
+    "minLevel": 75,
+    "maxLevel": 75,
+    "stackable": false,
+    "classType": "Bow",
+    "tradable": true,
+    "droppedBy": "Quest - Raven"
+  },
+  {
+    "name": "Raven's Wing",
+    "minLevel": 75,
+    "maxLevel": 75,
+    "stackable": false,
+    "classType": "Bow",
+    "tradable": true,
+    "droppedBy": "Quest - Raven"
+  },
+  {
+    "name": "Zakum Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Zakum"
+  },
+  {
+    "name": "Horntail Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Horntail"
+  },
+  {
+    "name": "Giant Pink Bean Cushion",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Pink Bean"
+  },
+  {
+    "name": "Lord Pirate Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Lord Pirate"
+  },
+  {
+    "name": "Soul Teddy Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Papulatus"
+  },
+  {
+    "name": "Poor Ribbon Pig Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Mushmom"
+  },
+  {
+    "name": "The Spirit of Rock Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Spirit of Rock"
+  },
+  {
+    "name": "Dunas Jet Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Dunas"
+  },
+  {
+    "name": "Balrog Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Balrog"
+  },
+  {
+    "name": "Lioner Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Eliza"
+  },
+  {
+    "name": "Nibelung Battleship Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Nibelung"
+  },
+  {
+    "name": "Ergoth Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Guild PQ"
+  },
+  {
+    "name": "Manon Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Manon"
+  },
+  {
+    "name": "Griffey Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Griffey"
+  },
+  {
+    "name": "Papulatus Clock Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Papulatus"
+  },
+  {
+    "name": "Headless Horseman Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Headless Horseman"
+  },
+  {
+    "name": "Pianus Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Pianus"
+  },
+  {
+    "name": "Scarlion Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Scarlion"
+  },
+  {
+    "name": "Targa Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Targa"
+  },
+  {
+    "name": "Krexel Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Krexel"
+  },
+  {
+    "name": "Onyx Apple",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Amoria PQ"
+  },
+  {
+    "name": "APQ Green Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Amoria PQ"
+  },
+  {
+    "name": "APQ Red Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Amoria PQ"
+  },
+  {
+    "name": "Ellin Forest Ring",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Ring",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Old Raggedy Cape",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Bathrobe (M/F)",
+    "minLevel": 20,
+    "maxLevel": 20,
+    "stackable": false,
+    "classType": "Overall",
+    "tradable": true,
+    "droppedBy": "Showa Town Exchange Quest"
+  },
+  {
+    "name": "Sauna Robe (M/F)",
+    "minLevel": 30,
+    "maxLevel": 30,
+    "stackable": false,
+    "classType": "Overall",
+    "tradable": true,
+    "droppedBy": "Showa Town Exchange Quest"
+  },
+  {
+    "name": "Ludibrium Cape",
+    "minLevel": 65,
+    "maxLevel": 65,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Maple Bandana (Blue)",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Hat",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Maple Bandana (Yellow)",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Hat",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Maple Bandana (Red)",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Hat",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Kerning PQ Necklace",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "Kerning PQ"
+  },
+  {
+    "name": "Ludi PQ Glasses",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Eye Accessory",
+    "tradable": true,
+    "droppedBy": "Ludibrium PQ"
+  },
+  {
+    "name": "Monster Book Ring (Tier 10)",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Ring",
+    "tradable": false,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Mark of the Beta",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Medal",
+    "tradable": false,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Amorian Bouquet",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Weapon",
+    "tradable": true,
+    "droppedBy": "Amoria PQ"
+  },
+  {
+    "name": "Crimsonwood Belt (T1)",
+    "minLevel": 90,
+    "maxLevel": 90,
+    "stackable": false,
+    "classType": "Belt",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "Crimsonwood Belt (T2)",
+    "minLevel": 100,
+    "maxLevel": 100,
+    "stackable": false,
+    "classType": "Belt",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "Crimsonwood Belt (T3)",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Belt",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "Crimsonwood Belt (T4)",
+    "minLevel": 120,
+    "maxLevel": 120,
+    "stackable": false,
+    "classType": "Belt",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "CWKPQ Pendant (Archer)",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "CWKPQ Pendant (Warrior)",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "CWKPQ Pendant (Mage)",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "CWKPQ Pendant (Thief)",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "CWKPQ Pendant (Pirate)",
+    "minLevel": 110,
+    "maxLevel": 110,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "CWKPQ"
+  },
+  {
+    "name": "Maple Anniversary Hat",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Hat",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Maple Anniversary Cape",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Maple Leaf",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": true,
+    "classType": "Etc",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Zakum Dungeon Key",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": true,
+    "classType": "Etc",
+    "tradable": false,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Horntail Egg",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Use",
+    "tradable": false,
+    "droppedBy": "Horntail"
+  },
+  {
+    "name": "Eye of Fire",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": true,
+    "classType": "Use",
+    "tradable": true,
+    "droppedBy": "Zakum Quest"
+  },
+  {
+    "name": "Bergamot Certificate",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": true,
+    "classType": "Etc",
+    "tradable": true,
+    "droppedBy": "Neo Tokyo Quest"
+  },
+  {
+    "name": "Neo Tokyo Fragment",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": true,
+    "classType": "Etc",
+    "tradable": true,
+    "droppedBy": "Neo Tokyo"
+  },
+  {
+    "name": "VIP Teleport Rock",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": true,
+    "classType": "Use",
+    "tradable": true,
+    "droppedBy": "Cash"
+  },
+  {
+    "name": "Teleport Rock",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": true,
+    "classType": "Use",
+    "tradable": true,
+    "droppedBy": "Cash"
+  },
+  {
+    "name": "Store Permit",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Use",
+    "tradable": true,
+    "droppedBy": "Cash"
+  },
+  {
+    "name": "Mysterious Candy",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Mark of Heroism",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Quest Item",
+    "tradable": false,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Spirit Pendant",
+    "minLevel": 70,
+    "maxLevel": 70,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Icarus Cape (2)",
+    "minLevel": 42,
+    "maxLevel": 42,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Power Elixir",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Elixir",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Cider",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Showa"
+  },
+  {
+    "name": "Cookie",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Coke Pill",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Wizard Elixir",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Warrior Elixir",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Sniper Pill",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "All Cure Potion",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Ginger Ale",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Sunrise Dew",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Sunset Dew",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Melting Cheese",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Ice Cream Pop",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Magic Rock",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Shop"
+  },
+  {
+    "name": "Summoning Rock",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Shop"
+  },
+  {
+    "name": "Heartstopper",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Event/PQ"
+  },
+  {
+    "name": "Ilbi Throwing-Star",
+    "minLevel": 50,
+    "maxLevel": 50,
+    "stackable": true,
+    "classType": "Throwing Star",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Steelies",
+    "minLevel": 30,
+    "maxLevel": 30,
+    "stackable": true,
+    "classType": "Throwing Star",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Balanced Fury",
+    "minLevel": 70,
+    "maxLevel": 70,
+    "stackable": true,
+    "classType": "Throwing Star",
+    "tradable": true,
+    "droppedBy": "Quest - Crafted"
+  },
+  {
+    "name": "Magic Throwing Knife",
+    "minLevel": 55,
+    "maxLevel": 55,
+    "stackable": true,
+    "classType": "Throwing Star",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Tobi Throwing-Star",
+    "minLevel": 20,
+    "maxLevel": 20,
+    "stackable": true,
+    "classType": "Throwing Star",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Kumbi Throwing-Star",
+    "minLevel": 15,
+    "maxLevel": 15,
+    "stackable": true,
+    "classType": "Throwing Star",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Mokbi Throwing-Star",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": true,
+    "classType": "Throwing Star",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Dragon's Breath Elixir",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Event"
+  },
+  {
+    "name": "Hot Dog Supreme",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Event"
+  },
+  {
+    "name": "Sunset Dew (Trade)",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Cider (Showa)",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Showa"
+  },
+  {
+    "name": "Amorian Basket",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Consumable",
+    "tradable": true,
+    "droppedBy": "Amoria PQ"
+  },
+  {
+    "name": "White Scroll",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Scroll",
+    "tradable": false,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Chaos Scroll 60%",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": true,
+    "classType": "Scroll",
+    "tradable": false,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Brown Work Glove",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": false,
+    "classType": "Gloves",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Yellow Work Glove",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": false,
+    "classType": "Gloves",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Red Marker",
+    "minLevel": 35,
+    "maxLevel": 35,
+    "stackable": false,
+    "classType": "Gloves",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Brown Adventurer Cape",
+    "minLevel": 50,
+    "maxLevel": 50,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Yellow Adventurer Cape",
+    "minLevel": 50,
+    "maxLevel": 50,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Purple Adventurer Cape",
+    "minLevel": 50,
+    "maxLevel": 50,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Pink Adventure Cape",
+    "minLevel": 65,
+    "maxLevel": 65,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Purple Adventure Cape",
+    "minLevel": 65,
+    "maxLevel": 65,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Maple Shield",
+    "minLevel": 20,
+    "maxLevel": 20,
+    "stackable": false,
+    "classType": "Shield",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Blue Old Lamp",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Hat",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Black Bandana",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": false,
+    "classType": "Hat",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Blue China Dress",
+    "minLevel": 20,
+    "maxLevel": 20,
+    "stackable": false,
+    "classType": "Overall",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Red China Dress",
+    "minLevel": 20,
+    "maxLevel": 20,
+    "stackable": false,
+    "classType": "Overall",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Maple Leaf",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": true,
+    "classType": "Etc",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Storm Pendent",
+    "minLevel": 90,
+    "maxLevel": 90,
+    "stackable": false,
+    "classType": "Pendant",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Maple Earrings",
+    "minLevel": 15,
+    "maxLevel": 15,
+    "stackable": false,
+    "classType": "Earrings",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Raccoon Mask (Brown)",
+    "minLevel": 15,
+    "maxLevel": 15,
+    "stackable": false,
+    "classType": "Face Accessory",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Raccoon Mask (White)",
+    "minLevel": 15,
+    "maxLevel": 15,
+    "stackable": false,
+    "classType": "Face Accessory",
+    "tradable": true,
+    "droppedBy": "Gachapon"
+  },
+  {
+    "name": "Starlight Robe",
+    "minLevel": 38,
+    "maxLevel": 38,
+    "stackable": false,
+    "classType": "Overall",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Sauna Robe (M/F)",
+    "minLevel": 30,
+    "maxLevel": 30,
+    "stackable": false,
+    "classType": "Overall",
+    "tradable": true,
+    "droppedBy": "Showa Town Exchange Quest"
+  },
+  {
+    "name": "Bathrobe (M/F)",
+    "minLevel": 20,
+    "maxLevel": 20,
+    "stackable": false,
+    "classType": "Overall",
+    "tradable": true,
+    "droppedBy": "Showa Town Exchange Quest"
+  },
+  {
+    "name": "Old Raggedy Cape",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Pink Gaia Cape",
+    "minLevel": 65,
+    "maxLevel": 65,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Purple Gaia Cape",
+    "minLevel": 65,
+    "maxLevel": 65,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Ludia Cape",
+    "minLevel": 50,
+    "maxLevel": 50,
+    "stackable": false,
+    "classType": "Cape",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Snowshoes (Red)",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": false,
+    "classType": "Shoes",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Snowshoes (Black)",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": false,
+    "classType": "Shoes",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Black Crystal Earrings",
+    "minLevel": 80,
+    "maxLevel": 80,
+    "stackable": false,
+    "classType": "Earrings",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Blue Mystic Shield",
+    "minLevel": 33,
+    "maxLevel": 33,
+    "stackable": false,
+    "classType": "Shield",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Pan Lid",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": false,
+    "classType": "Shield",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Maple Glory Sword",
+    "minLevel": 64,
+    "maxLevel": 64,
+    "stackable": false,
+    "classType": "1H Sword",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Maple Soul Singer",
+    "minLevel": 35,
+    "maxLevel": 35,
+    "stackable": false,
+    "classType": "1H Sword",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Maple Demon Axe",
+    "minLevel": 35,
+    "maxLevel": 35,
+    "stackable": false,
+    "classType": "Axe",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Maple Soul Spear",
+    "minLevel": 64,
+    "maxLevel": 64,
+    "stackable": false,
+    "classType": "Spear",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Maple Wisdom Staff",
+    "minLevel": 64,
+    "maxLevel": 64,
+    "stackable": false,
+    "classType": "Staff",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Purple Surfboard",
+    "minLevel": 20,
+    "maxLevel": 20,
+    "stackable": false,
+    "classType": "Polearm",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Surfboard",
+    "minLevel": 20,
+    "maxLevel": 20,
+    "stackable": false,
+    "classType": "Polearm",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Frozen Tuna",
+    "minLevel": 20,
+    "maxLevel": 20,
+    "stackable": false,
+    "classType": "Polearm",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Sky-blue Wooden Chair",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Desert Rabbit Cushion",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Desert Boss"
+  },
+  {
+    "name": "Pink Seal Cushion",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Quest - Exchange"
+  },
+  {
+    "name": "Blue Seal Cushion",
+    "minLevel": null,
+    "maxLevel": null,
+    "stackable": false,
+    "classType": "Chair",
+    "tradable": true,
+    "droppedBy": "Quest - Exchange"
+  },
+  {
+    "name": "Maple Bandana (Green)",
+    "minLevel": 0,
+    "maxLevel": 0,
+    "stackable": false,
+    "classType": "Hat",
+    "tradable": true,
+    "droppedBy": "Quest"
+  },
+  {
+    "name": "Smiling Mask",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": false,
+    "classType": "Face Accessory",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Sad Mask",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": false,
+    "classType": "Face Accessory",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Angry Mask",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": false,
+    "classType": "Face Accessory",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Crying Mask",
+    "minLevel": 10,
+    "maxLevel": 10,
+    "stackable": false,
+    "classType": "Face Accessory",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "Brown Raccoon Mask",
+    "minLevel": 15,
+    "maxLevel": 15,
+    "stackable": false,
+    "classType": "Face Accessory",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  },
+  {
+    "name": "White Raccoon Mask",
+    "minLevel": 15,
+    "maxLevel": 15,
+    "stackable": false,
+    "classType": "Face Accessory",
+    "tradable": true,
+    "droppedBy": "Multiple Mobs/Bosses"
+  }
 ]
