@@ -3,126 +3,34 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MapleGuessr v0.2 (Early Access)</title>
+<title>MapleGuessr v0.2.2 (Early Access)</title>
 <style>
 /* ===== UI & Layout Styling ===== */
-body {
-  font-family: Arial, sans-serif;
-  background: #1a1a1a;
-  color: #f0f0f0;
-  text-align: center;
-  padding: 20px;
-}
-h1 {
-  cursor: pointer;
-  color: #6d88ff;
-}
-.menu {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  margin-top: 50px;
-}
-.menu button {
-  padding: 14px 20px;
-  font-size: 18px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 200px;
-  background-color: #444;
-  color: white;
-}
-.menu button:hover {
-  background-color: #666;
-}
-.wip {
-  font-size: 12px;
-  color: #aaa;
-  margin-top: 4px;
-}
-.game-container {
-  display: none;
-  max-width: 900px;
-  margin: auto;
-}
-input {
-  padding: 8px;
-  width: 200px;
-  margin-top: 10px;
-  border-radius: 6px;
-  border: none;
-}
-button#submit-btn {
-  padding: 8px 14px;
-  margin-left: 5px;
-  cursor: pointer;
-  background: #6d88ff;
-  border: none;
-  border-radius: 6px;
-  color: white;
-}
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 15px;
-}
-th, td {
-  padding: 8px;
-  border: 1px solid #555;
-}
-th {
-  background: #333;
-}
-.green {
-  background-color: #2e7d32;
-}
-.yellow {
-  background-color: #f9a825;
-}
-.red {
-  background-color: #c62828;
-}
-.answer-row {
-  font-weight: bold;
-  outline: 2px solid #6dff6d;
-}
-#suggestions {
-  list-style: none;
-  background: #2a2a2a;
-  padding: 0;
-  margin: 0 auto;
-  width: 220px;
-  border-radius: 4px;
-  text-align: left;
-}
-#suggestions li {
-  padding: 6px;
-  cursor: pointer;
-}
-#suggestions li:hover {
-  background-color: #444;
-}
+  
+body { font-family: Arial, sans-serif; background: #1a1a1a; color: #f0f0f0; text-align: center; padding: 20px; }
+h1 { cursor: pointer; color: #6d88ff; }
+.menu { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 50px; }
+.menu button { padding: 14px 20px; font-size: 18px; border: none; border-radius: 8px; cursor: pointer; width: 200px; background-color: #444; color: white; }
+.menu button:hover { background-color: #666; }
+.wip { font-size: 12px; color: #aaa; margin-top: 4px; }
+.game-container { display: none; max-width: 900px; margin: auto; }
+input { padding: 8px; width: 220px; margin-top: 10px; border-radius: 6px; border: none; }
+button#submit-btn { padding: 8px 14px; margin-left: 5px; cursor: pointer; background: #6d88ff; border: none; border-radius: 6px; color: white; }
+table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+th, td { padding: 8px; border: 1px solid #555; }
+th { background: #333; }
+.green { background-color: #2e7d32; }
+.yellow { background-color: #f9a825; }
+.red { background-color: #c62828; }
+.answer-row { font-weight: bold; outline: 2px solid #6dff6d; }
+#suggestions { list-style: none; background: #2a2a2a; padding: 0; margin: 0 auto; width: 240px; border-radius: 4px; text-align: left; }
+#suggestions li { padding: 6px; cursor: pointer; }
+#suggestions li:hover { background-color: #444; }
 /* Collapsible How to Play */
-.howto {
-  margin-top: 20px;
-  text-align: left;
-  background: #2a2a2a;
-  border-radius: 6px;
-  overflow: hidden;
-}
-.howto-header {
-  padding: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  background: #333;
-}
-.howto-content {
-  display: none;
-  padding: 10px;
-  font-size: 14px;
-}
+.howto { margin-top: 20px; text-align: left; background: #2a2a2a; border-radius: 6px; overflow: hidden; }
+.howto-header { padding: 10px; cursor: pointer; font-weight: bold; background: #333; }
+.howto-content { display: none; padding: 10px; font-size: 14px; }
+.badge { display: inline-block; padding: 2px 6px; border-radius: 4px; font-size: 12px; margin-right: 6px; background:#444; }
 </style>
 </head>
 <body>
@@ -131,17 +39,9 @@ th {
 
 <!-- Main Menu -->
 <div id="menu" class="menu">
-  <div>
-    <button id="play-items">Items</button>
-  </div>
-  <div>
-    <button disabled>NPCs</button>
-    <div class="wip">(WIP)</div>
-  </div>
-  <div>
-    <button disabled>Bosses</button>
-    <div class="wip">(WIP)</div>
-  </div>
+  <div><button id="play-items">Items</button></div>
+  <div><button disabled>NPCs</button><div class="wip">(WIP)</div></div>
+  <div><button disabled>Bosses</button><div class="wip">(WIP)</div></div>
 </div>
 
 <!-- Game Screen -->
@@ -159,7 +59,7 @@ th {
         <th>Stackable</th>
         <th>Class Type</th>
         <th>Tradable</th>
-        <th>Dropped By</th>
+        <th>Dropped By / Source</th>
       </tr>
     </thead>
     <tbody></tbody>
@@ -175,20 +75,26 @@ th {
       <p><strong>Colors:</strong></p>
       <ul>
         <li>🟩 Green = Exact match</li>
-        <li>🟨 Yellow = Partial match (close equip level ±5, same drop type but wrong source)</li>
+        <li>🟨 Yellow = Partial match (Equip Level ±5, same <em>source type</em> but different specific source)</li>
         <li>🟥 Red = No match</li>
       </ul>
-      <p><strong>Equip Level:</strong> ↑ means the real item requires a higher level, ↓ means lower.</p>
-      <p>Keep guessing until you find the correct item!</p>
+      <p><strong>Equip Level:</strong> ↑ means the real item requires a higher level, ↓ means lower. “—” for non-equipables.</p>
+      <p><strong>Source badges:</strong> We show the source type right in the cell:
+        <span class="badge">[Mob]</span>
+        <span class="badge">[Gachapon]</span>
+        <span class="badge">[PQ]</span>
+      </p>
     </div>
   </div>
 </div>
 
 <script>
-// ===== Items Data =====
+// ===== Items Data (v0.2.2) =====
+  
+  localStorage.clear(); // TEMP: clear all game data each load for testing
 const items = [
   { name: "Zakum Helmet", equipLevel: 50, stackable: false, classType: "Helmet", tradable: false, droppedBy: "Zakum" },
-  { name: "Onyx Apple", equipLevel: null, stackable: true, classType: "Consumable", tradable: true, droppedBy: "Crimson Balrog" },
+  { name: "Onyx Apple", equipLevel: null, stackable: true, classType: "Consumable", tradable: true, droppedBy: "Amoria PQ" },
   { name: "Chaos Scroll 60%", equipLevel: null, stackable: true, classType: "Scroll", tradable: false, droppedBy: "Gachapon - Kerning" },
   { name: "Facestompers", equipLevel: 50, stackable: false, classType: "Shoes", tradable: true, droppedBy: "Scarlion" },
   { name: "White Scroll", equipLevel: null, stackable: true, classType: "Scroll", tradable: true, droppedBy: "Gachapon - Kerning" },
@@ -222,13 +128,46 @@ document.getElementById("howto-toggle").addEventListener("click", () => {
   }
 });
 
+// ===== Helpers for feedback =====
+function getDropType(src) {
+  const s = (src || "").toLowerCase();
+  if (s.includes("gachapon")) return "gachapon";
+  if (s.includes("pq")) return "pq";
+  return "mob"; // default: boss/mob
+}
+function formatSourceWithBadge(src) {
+  const t = getDropType(src);
+  const label = t === "pq" ? "[PQ]" : t === "gachapon" ? "[Gachapon]" : "[Mob]";
+  return `<span class="badge">${label}</span>${src}`;
+}
+function dropColor(guessDrop, answerDrop) {
+  if (guessDrop === answerDrop) return 'green';
+  const gType = getDropType(guessDrop);
+  const aType = getDropType(answerDrop);
+  if (gType === aType) return 'yellow';
+  return 'red';
+}
+function equipLevelColor(guess, correct) {
+  if (guess === correct) return 'green';
+  if (guess != null && correct != null && Math.abs(guess - correct) <= 5) return 'yellow';
+  return 'red';
+}
+function equipLevelDisplay(guess, correct) {
+  if (guess == null) return "—";
+  let arrow = "";
+  if (correct != null && guess < correct) arrow = " ↑";
+  if (correct != null && guess > correct) arrow = " ↓";
+  return guess + arrow;
+}
+
 // ===== Game Logic =====
 function startGame(pool) {
   const today = new Date().toDateString();
   const todayIndex = new Date().getDate() % pool.length;
   const answer = pool[todayIndex];
-  let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || { date: today, guesses: [] };
 
+  // daily reset for items category
+  let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || { date: today, guesses: [] };
   if (guessesData.date !== today) {
     guessesData = { date: today, guesses: [] };
     localStorage.setItem("guesses_items", JSON.stringify(guessesData));
@@ -252,34 +191,12 @@ function startGame(pool) {
       <td class="${item.stackable === answer.stackable ? 'green' : 'red'}">${item.stackable ? 'Yes' : 'No'}</td>
       <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
       <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
-      <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${item.droppedBy}</td>
+      <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
     `;
     tableBody.appendChild(row);
   }
 
-  function equipLevelColor(guess, correct) {
-    if (guess === correct) return 'green';
-    if (guess != null && correct != null && Math.abs(guess - correct) <= 5) return 'yellow';
-    return 'red';
-  }
-  function equipLevelDisplay(guess, correct) {
-    if (guess == null) return "—";
-    let arrow = "";
-    if (correct != null && guess < correct) arrow = " ↑";
-    if (correct != null && guess > correct) arrow = " ↓";
-    return guess + arrow;
-  }
-  function dropColor(guessDrop, answerDrop) {
-    if (guessDrop === answerDrop) return 'green';
-    const guessIsMob = !guessDrop.toLowerCase().includes("gachapon");
-    const answerIsMob = !answerDrop.toLowerCase().includes("gachapon");
-    if (guessIsMob && answerIsMob) return 'yellow';
-    const guessIsGach = guessDrop.toLowerCase().includes("gachapon");
-    const answerIsGach = answerDrop.toLowerCase().includes("gachapon");
-    if (guessIsGach && answerIsGach) return 'yellow';
-    return 'red';
-  }
-
+  // Suggestions
   guessInput.addEventListener("input", () => {
     const val = guessInput.value.trim().toLowerCase();
     suggestionBox.innerHTML = "";
@@ -296,21 +213,27 @@ function startGame(pool) {
     });
   });
 
+  // Submit Guess
   submitBtn.addEventListener("click", () => {
     const userGuess = guessInput.value.trim().toLowerCase();
     if (!userGuess) return;
+
     if (guessesData.guesses.find(g => g.name.toLowerCase() === userGuess)) {
       alert("Already guessed that!");
+      guessInput.focus();
       return;
     }
     const item = pool.find(i => i.name.toLowerCase() === userGuess);
     if (!item) {
       alert("Item not found in database.");
+      guessInput.focus();
       return;
     }
+
     guessesData.guesses.push(item);
     localStorage.setItem("guesses_items", JSON.stringify(guessesData));
     addGuessToTable(item);
+
     if (item.name.toLowerCase() === answer.name.toLowerCase()) {
       result.textContent = `🎉 Correct! You got it in ${guessesData.guesses.length} guesses.`;
       result.style.color = "#6dff6d";
@@ -318,6 +241,7 @@ function startGame(pool) {
       result.textContent = "❌ Not quite, try again.";
       result.style.color = "#ff7a7a";
     }
+
     guessInput.value = "";
     suggestionBox.innerHTML = "";
     guessInput.focus();
