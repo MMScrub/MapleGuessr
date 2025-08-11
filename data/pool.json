@@ -1,27 +1,4 @@
 [
-  { "name": "Zakum Helmet",      "minLevel": 50,  "maxLevel": 50,  "stackable": false, "classType": "Helmet",        "tradable": false, "droppedBy": "Zakum" },
-  { "name": "Onyx Apple",        "minLevel": null,"maxLevel": null,"stackable": true,  "classType": "Consumable",    "tradable": true,  "droppedBy": "Amoria PQ" },
-  { "name": "Chaos Scroll 60%",  "minLevel": null,"maxLevel": null,"stackable": true,  "classType": "Scroll",        "tradable": false, "droppedBy": "Gachapon" },
-  { "name": "White Scroll",      "minLevel": null,"maxLevel": null,"stackable": true,  "classType": "Scroll",        "tradable": false, "droppedBy": "Gachapon" },
-
-  { "name": "Mark of Naricain",  "minLevel": 110, "maxLevel": 110, "stackable": false, "classType": "Pendant",       "tradable": true,  "droppedBy": "CWKPQ" },
-  { "name": "Horntail Pendant",  "minLevel": 120, "maxLevel": 120, "stackable": false, "classType": "Pendant",       "tradable": true,  "droppedBy": "Horntail" },
-  { "name": "Ravana Helmet",     "minLevel": 50,  "maxLevel": 90,  "stackable": false, "classType": "Helmet",        "tradable": false, "droppedBy": "Quest - Ravana" },
-  { "name": "Facestompers",      "minLevel": 150, "maxLevel": 150, "stackable": false, "classType": "Shoes",         "tradable": true,  "droppedBy": "PinkBean" },
-  { "name": "Dragon Khanjar",    "minLevel": 120, "maxLevel": 120, "stackable": false, "classType": "Shield",        "tradable": true,  "droppedBy": "..." },
-  { "name": "Maple Shield",      "minLevel": 20,  "maxLevel": 20,  "stackable": false, "classType": "Shield",        "tradable": true,  "droppedBy": "Gachapon" },
-
-  { "name": "Pink Gaia Cape",    "minLevel": 65,  "maxLevel": 65,  "stackable": false, "classType": "Cape",          "tradable": true,  "droppedBy": "Gachapon" },
-  { "name": "Yellow Snowshoes",  "minLevel": 10,  "maxLevel": 10,  "stackable": false, "classType": "Shoes",         "tradable": true,  "droppedBy": "Gachapon" },
-  { "name": "Red Whip",          "minLevel": 30,  "maxLevel": 30,  "stackable": false, "classType": "One-Handed Sword","tradable": true,"droppedBy": "Gachapon" },
-  { "name": "Flaming Katana",    "minLevel": 50,  "maxLevel": 50,  "stackable": false, "classType": "Two-Handed Sword","tradable": true,"droppedBy": "Gachapon" },
-
-  { "name": "Ellin Ring",        "minLevel": 10,  "maxLevel": 10,  "stackable": false, "classType": "Ring",          "tradable": false, "droppedBy": "Quest - Ellin Forest" },
-  { "name": "Monster Book Ring", "minLevel": null,"maxLevel": null,"stackable": false, "classType": "Ring",          "tradable": false, "droppedBy": "Quest - Monster Book" },
-  { "name": "Spectrum Goggles",  "minLevel": 35,  "maxLevel": 35,  "stackable": false, "classType": "Eye Accessory", "tradable": false, "droppedBy": "PQ - Ludibrium" },
-  { "name": "Broken Glasses",    "minLevel": 35,  "maxLevel": 35,  "stackable": false, "classType": "Eye Accessory", "tradable": false, "droppedBy": "PQ - Ludibrium" },
-
-  { "name": "Balanced Fury",     "minLevel": 70,  "maxLevel": 70,  "stackable": true,  "classType": "Throwing Star", "tradable": true,  "droppedBy": "Quest - Crafted" },
-  { "name": "Coke Pill",         "minLevel": null,"maxLevel": null,"stackable": true,  "classType": "Consumable",    "tradable": true,  "droppedBy": "Event" },
-  { "name": "Heartstoppers",     "minLevel": null,"maxLevel": null,"stackable": true,  "classType": "Consumable",    "tradable": true,  "droppedBy": "Event" },
+  { "name": "Zakum Helmet", "minLevel": 50, "maxLevel": 50, "stackable": false, "classType": "Helmet", "tradable": false, "droppedBy": "Zakum" },
+  { "name": "Dragon Khanjar", "minLevel": 110, "maxLevel": 110, "stackable": false, "classType": "Shield", "tradable": true, "droppedBy": ["Nibelung","Core Blaze","Nameless Magic Monster","Dunas","AfterLord","Bergamot"] }
 ]
