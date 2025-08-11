@@ -51,5 +51,5 @@ To run locally:
 ---
 
 ## 📜 Credits
-Created by [Your Name]  
+Created by Jacob / MMScrub 
 Inspired by **MapleLegends** and community projects like **MCDLE**.
