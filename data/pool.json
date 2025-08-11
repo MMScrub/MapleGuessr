@@ -1,0 +1,5 @@
+[
+  { "name": "Zakum Helmet", "minLevel": 50, "maxLevel": 50, "stackable": false, "classType": "Helmet", "tradable": false, "droppedBy": "Zakum" },
+  { "name": "Onyx Apple", "minLevel": null, "maxLevel": null, "stackable": true, "classType": "Consumable", "tradable": true, "droppedBy": "Amoria PQ" },
+  { "name": "Chaos Scroll 60%", "minLevel": null, "maxLevel": null, "stackable": true, "classType": "Scroll", "tradable": false, "droppedBy": "Gachapon" }
+]
