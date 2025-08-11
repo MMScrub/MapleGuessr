@@ -1,4 +1,4 @@
-export const pool = [
+[
   { name: "Zakum Helmet", minLevel: 50, maxLevel: 50, stackable: false, classType: "Helmet", tradable: false, droppedBy: "Zakum" },
   { name: "Horntail Pendant", minLevel: 120, maxLevel: 120, stackable: false, classType: "Pendant", tradable: false, droppedBy: "Horntail" },
   { name: "Dragon Khanjar", minLevel: 110, maxLevel: 110, stackable: false, classType: "Shield", tradable: true, droppedBy: "Nibelung", "Core Blaze", "Nameless Magic Monster", "Dunas", "AfterLord", "Bergamot" },
