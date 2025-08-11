@@ -1,13 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MapleGuessr</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Menu -->
+<div id="menu" style="display:flex; flex-direction:column; align-items:center;">
+  <h1 id="title">MapleGuessr</h1>
+  <button id="play-items">Play Items</button>
+  <button id="howto-toggle">How to Play +</button>
+  <div id="howto-content" style="display:none;">
+    <p><b>Goal:</b> Guess the hidden MapleLegends item of the day.</p>
+    <p><b>Colors:</b><br>
+      Green = Exact match<br>
+      Yellow = Partial match<br>
+      Red = No match</p>
+    <p><b>Equip Level:</b> ✓ = exact, ↑ higher, ↓ lower, — non-equipable.</p>
+    <p><b>Source badges:</b> [Mob] [PQ] [Gachapon] [Quest]</p>
+  </div>
+</div>
+
+<!-- Game -->
+<div id="game" style="display:none;">
+  <div id="controls">
+    <button id="reset-btn">Reset Game (Dev)</button>
+    <button id="random-btn">Random Answer (Dev)</button>
+    <button id="daily-btn">Daily Mode (Dev)</button>
+    <button id="next-btn">Next Answer (Dev)</button>
+    <button id="reveal-btn">Reveal Answer (Dev)</button>
+    <span id="reveal"></span>
+  </div>
+
+  <h2 id="mode"></h2>
+  <p id="guess-counter"></p>
+  <input id="guess-input" type="text" placeholder="Enter your guess...">
+  <button id="submit-btn">Submit</button>
+  <ul id="suggestions"></ul>
+
+  <table id="guess-table">
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Equip Level</th>
+        <th>Stackable</th>
+        <th>Class Type</th>
+        <th>Tradable</th>
+        <th>Dropped By / Source</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <p id="result"></p>
+</div>
+
+<!-- Main Game Logic -->
 <script type="module">
-/* ========= import curated pool ========= */
 import { pool as POOL } from './data/pool.js';
 
-/* ========= data loader (now instant) ========= */
+/* Load pool instantly from JS */
 async function loadPoolData() {
-  return POOL; // no fetch, no JSON, just the JS array
+  return POOL;
 }
 
-/* ================= Dev Buttons ================= */
+/* ================== Dev Buttons ================== */
 document.getElementById("reset-btn").addEventListener("click", () => {
   localStorage.clear();
   location.reload();
@@ -36,31 +96,32 @@ document.getElementById("reveal-btn").addEventListener("click", () => {
   document.getElementById("reveal").textContent = `Answer (Dev): ${ans?.name || '—'}`;
 });
 
-/* ================= Menu + How-to ================= */
+/* ================== Menu Controls ================== */
 document.getElementById("play-items").addEventListener("click", async () => {
   document.getElementById("menu").style.display = "none";
   document.getElementById("game").style.display = "block";
-
   const pool = await loadPoolData();
-  window.__POOL__ = pool;             // for dev tools
-  window.__SUGGEST_INDEX__ = pool;    // same list for autocomplete right now
-
+  window.__POOL__ = pool;
+  window.__SUGGEST_INDEX__ = pool;
   startGame(pool);
 });
-
 document.getElementById("title").addEventListener("click", () => {
   document.getElementById("menu").style.display = "flex";
   document.getElementById("game").style.display = "none";
 });
-
 document.getElementById("howto-toggle").addEventListener("click", () => {
   const content = document.getElementById("howto-content");
   const toggle = document.getElementById("howto-toggle");
-  if (content.style.display === "block") { content.style.display = "none"; toggle.textContent = "How to Play +"; }
-  else { content.style.display = "block"; toggle.textContent = "How to Play –"; }
+  if (content.style.display === "block") {
+    content.style.display = "none";
+    toggle.textContent = "How to Play +";
+  } else {
+    content.style.display = "block";
+    toggle.textContent = "How to Play –";
+  }
 });
 
-/* ================= Answer selection ================= */
+/* ================== Game Helpers ================== */
 function getAnswerFromPool(pool) {
   const forced = localStorage.getItem("dev_force_index");
   if (forced !== null) {
@@ -74,21 +135,20 @@ function isRandomMode() {
   return localStorage.getItem("dev_force_index") !== null;
 }
 
-/* ================= Helpers: badges, names, ranges, multi-source ================= */
+/* Badge helpers */
 function getDropType(src) {
   const s = (src || "").toLowerCase();
   if (s.includes("gachapon")) return "gachapon";
-  if (s.includes("pq"))       return "pq";
-  if (s.includes("quest"))    return "quest";
+  if (s.includes("pq")) return "pq";
+  if (s.includes("quest")) return "quest";
   return "mob";
 }
 function formatOneSource(src) {
   const t = getDropType(src);
-  const cls   = t === "pq" ? "pq" : t === "gachapon" ? "gach" : t === "quest" ? "quest" : "mob";
+  const cls = t === "pq" ? "pq" : t === "gachapon" ? "gach" : t === "quest" ? "quest" : "mob";
   const label = t === "pq" ? "[PQ]" : t === "gachapon" ? "[Gachapon]" : t === "quest" ? "[Quest]" : "[Mob]";
   return `<span class="badge ${cls}">${label}</span>${src}`;
 }
-// Accept string OR array; show first + "(+N more)" and full list on hover tooltip
 function formatSourceWithBadge(src) {
   const list = Array.isArray(src) ? src : (src ? [src] : []);
   if (list.length === 0) return "";
@@ -98,11 +158,9 @@ function formatSourceWithBadge(src) {
   const title = list.join(", ");
   return `<span title="${title}">${first}${more}</span>`;
 }
-// Scoring: GREEN if any exact source matches; YELLOW if any type matches; else RED
 function dropColor(guessDrop, answerDrop) {
   const gList = Array.isArray(guessDrop) ? guessDrop : (guessDrop ? [guessDrop] : []);
   const aList = Array.isArray(answerDrop) ? answerDrop : (answerDrop ? [answerDrop] : []);
-
   for (const g of gList) for (const a of aList) {
     if ((g || "") === (a || "")) return "green";
   }
@@ -116,7 +174,7 @@ function highlightName(guessName, answerName) {
   return guessName.split(/\s+/).map(w => aSet.has(w.toLowerCase()) ? `<b>${w}</b>` : w).join(' ');
 }
 
-/* Range helpers */
+/* Level helpers */
 function bothNull(aMin, aMax, bMin, bMax) {
   return aMin == null && aMax == null && bMin == null && bMax == null;
 }
@@ -130,62 +188,51 @@ function rangesOverlap(gMin, gMax, aMin, aMax) {
 }
 function rangeGap(gMin, gMax, aMin, aMax) {
   if (rangesOverlap(gMin, gMax, aMin, aMax)) return 0;
-  if (gMax < aMin) return aMin - gMax;   // guess below answer
-  return gMin - aMax;                     // guess above answer
+  if (gMax < aMin) return aMin - gMax;
+  return gMin - aMax;
 }
-// Color logic: green = overlap; yellow = gap ≤ 5; red = far/no data
 function levelColor(gMin, gMax, aMin, aMax) {
   if (bothNull(gMin, gMax, aMin, aMax)) return 'green';
-  if (anyNull(gMin, gMax, aMin, aMax))  return 'red';
+  if (anyNull(gMin, gMax, aMin, aMax)) return 'red';
   if (rangesOverlap(gMin, gMax, aMin, aMax)) return 'green';
   return rangeGap(gMin, gMax, aMin, aMax) <= 5 ? 'yellow' : 'red';
 }
-// Display: "—" for non-equipables; "min–max" or single; add ✓ / ↑ / ↓
 function levelDisplay(gMin, gMax, aMin, aMax) {
   if (gMin == null || gMax == null) return "—";
   const text = (gMin === gMax) ? `${gMax}` : `${gMin}–${gMax}`;
-  if (aMin == null || aMax == null) return text; // answer not equipable
+  if (aMin == null || aMax == null) return text;
   if (rangesOverlap(gMin, gMax, aMin, aMax)) return `${text} ✓`;
-  if (gMax < aMin) return `${text} ↑`; // need higher
-  if (gMin > aMax) return `${text} ↓`; // need lower
+  if (gMax < aMin) return `${text} ↑`;
+  if (gMin > aMax) return `${text} ↓`;
   return text;
 }
 
-/* ================= Game Logic ================= */
+/* ================== Game Logic ================== */
 function startGame(pool) {
   const modeEl = document.getElementById("mode");
   modeEl.innerHTML = isRandomMode()
     ? `Mode: <span class="random">Random (Dev)</span>`
     : `Mode: <span class="daily">Daily</span>`;
-
   const answer = getAnswerFromPool(pool);
   const today = new Date().toDateString();
-
-  // per-day guesses (kept even with random mode toggle)
   let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || { date: today, guesses: [] };
   if (guessesData.date !== today && !isRandomMode()) {
     guessesData = { date: today, guesses: [] };
     localStorage.setItem("guesses_items", JSON.stringify(guessesData));
   }
-
   const guessInput = document.getElementById("guess-input");
   const submitBtn = document.getElementById("submit-btn");
   const tableBody = document.querySelector("#guess-table tbody");
   const result = document.getElementById("result");
   const suggestionBox = document.getElementById("suggestions");
   const counterEl = document.getElementById("guess-counter");
-
   tableBody.innerHTML = "";
   updateCounter();
   guessInput.focus();
-
-  // render prior guesses
   (guessesData.guesses || []).forEach(g => addGuessToTable(g));
-
   function updateCounter() {
     counterEl.textContent = `Guess #${(guessesData.guesses?.length || 0) + 1}`;
   }
-
   function addGuessToTable(item) {
     const row = document.createElement("tr");
     if (item.name === answer.name) row.classList.add("answer-row");
@@ -199,13 +246,10 @@ function startGame(pool) {
     `;
     tableBody.appendChild(row);
   }
-
-  // Suggestions (use the same pool for now)
   guessInput.addEventListener("input", () => {
     const val = guessInput.value.trim().toLowerCase();
     suggestionBox.innerHTML = "";
     if (!val) return;
-
     const src = window.__SUGGEST_INDEX__ || pool;
     const matches = src.filter(e => e.name.toLowerCase().includes(val));
     matches.slice(0, 8).forEach(match => {
@@ -218,12 +262,9 @@ function startGame(pool) {
       suggestionBox.appendChild(li);
     });
   });
-
-  // Submit guess
   submitBtn.addEventListener("click", () => {
     const userGuess = guessInput.value.trim().toLowerCase();
     if (!userGuess) return;
-
     if ((guessesData.guesses || []).find(g => g.name.toLowerCase() === userGuess)) {
       alert("Already guessed that!");
       guessInput.focus();
@@ -235,11 +276,9 @@ function startGame(pool) {
       guessInput.focus();
       return;
     }
-
     guessesData.guesses.push(item);
     localStorage.setItem("guesses_items", JSON.stringify(guessesData));
     addGuessToTable(item);
-
     if (item.name.toLowerCase() === answer.name.toLowerCase()) {
       result.textContent = `🎉 Correct! You got it in ${guessesData.guesses.length} guesses.`;
       result.style.color = "#6dff6d";
@@ -247,7 +286,6 @@ function startGame(pool) {
       result.textContent = "Not quite, try again.";
       result.style.color = "#ff7a7a";
     }
-
     updateCounter();
     guessInput.value = "";
     suggestionBox.innerHTML = "";
@@ -255,3 +293,5 @@ function startGame(pool) {
   });
 }
 </script>
+</body>
+</html>
