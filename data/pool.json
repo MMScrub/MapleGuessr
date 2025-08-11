@@ -1,4 +1,5 @@
-{ name: "Zakum Helmet",      minLevel: 50,  maxLevel: 50,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Zakum" },
+[
+  { name: "Zakum Helmet",      minLevel: 50,  maxLevel: 50,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Zakum" },
   { name: "Onyx Apple",        minLevel: null,maxLevel: null,stackable: true,  classType: "Consumable",    tradable: true,  droppedBy: "Amoria PQ" },
   { name: "Chaos Scroll 60%",  minLevel: null,maxLevel: null,stackable: true,  classType: "Scroll",        tradable: false, droppedBy: "Gachapon" },
   { name: "Facestompers",      minLevel: 150, maxLevel: 150, stackable: false, classType: "Shoes",         tradable: true,  droppedBy: "PinkBean" },
@@ -7,3 +8,4 @@
   { name: "Balanced Fury",     minLevel: 70,  maxLevel: 70,  stackable: true,  classType: "Throwing Star", tradable: true,  droppedBy: "Quest - Crafted" },
   { name: "Ravana Helmet",     minLevel: 50,  maxLevel: 90,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Quest - Ravana" },
   { name: "Crimson Arcglaive", minLevel: 100, maxLevel: 100, stackable: false, classType: "Spear",         tradable: true,  droppedBy: "Quest - Exchange" }
+]
