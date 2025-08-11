@@ -3,36 +3,126 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>MapleGuessr</title>
+<title>MapleGuessr v0.2 (Early Access)</title>
 <style>
-
-  /* ===== UI & Layout Styling =====
-   This section defines the overall appearance for:
-   - Page background, fonts, and text colors
-   - Menu layout and button styles
-   - Game container and input styling
-   - Guess table formatting
-   - Feedback colors for guesses (green, yellow, red)
-   - Suggestions dropdown list
-*/
-  body { font-family: Arial, sans-serif; background: #1a1a1a; color: #f0f0f0; text-align: center; padding: 20px; }
-  h1 { cursor: pointer; color: #6d88ff; }
-  .menu { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-top: 50px; }
-  .menu button { padding: 14px 20px; font-size: 18px; border: none; border-radius: 8px; cursor: pointer; width: 200px; background-color: #444; color: white; }
-  .menu button:hover { background-color: #666; }
-  .wip { font-size: 12px; color: #aaa; margin-top: 4px; }
-  .game-container { display: none; max-width: 800px; margin: auto; }
-  input { padding: 8px; width: 200px; margin-top: 10px; border-radius: 6px; border: none; }
-  button#submit-btn { padding: 8px 14px; margin-left: 5px; cursor: pointer; background: #6d88ff; border: none; border-radius: 6px; color: white; }
-  table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-  th, td { padding: 8px; border: 1px solid #555; }
-  th { background: #333; }
-  .green { background-color: #2e7d32; }
-  .yellow { background-color: #f9a825; }
-  .red { background-color: #c62828; }
-  #suggestions { list-style: none; background: #2a2a2a; padding: 0; margin: 0 auto; width: 220px; border-radius: 4px; text-align: left; }
-  #suggestions li { padding: 6px; cursor: pointer; }
-  #suggestions li:hover { background-color: #444; }
+/* ===== UI & Layout Styling ===== */
+body {
+  font-family: Arial, sans-serif;
+  background: #1a1a1a;
+  color: #f0f0f0;
+  text-align: center;
+  padding: 20px;
+}
+h1 {
+  cursor: pointer;
+  color: #6d88ff;
+}
+.menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  margin-top: 50px;
+}
+.menu button {
+  padding: 14px 20px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 200px;
+  background-color: #444;
+  color: white;
+}
+.menu button:hover {
+  background-color: #666;
+}
+.wip {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 4px;
+}
+.game-container {
+  display: none;
+  max-width: 900px;
+  margin: auto;
+}
+input {
+  padding: 8px;
+  width: 200px;
+  margin-top: 10px;
+  border-radius: 6px;
+  border: none;
+}
+button#submit-btn {
+  padding: 8px 14px;
+  margin-left: 5px;
+  cursor: pointer;
+  background: #6d88ff;
+  border: none;
+  border-radius: 6px;
+  color: white;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+th, td {
+  padding: 8px;
+  border: 1px solid #555;
+}
+th {
+  background: #333;
+}
+.green {
+  background-color: #2e7d32;
+}
+.yellow {
+  background-color: #f9a825;
+}
+.red {
+  background-color: #c62828;
+}
+.answer-row {
+  font-weight: bold;
+  outline: 2px solid #6dff6d;
+}
+#suggestions {
+  list-style: none;
+  background: #2a2a2a;
+  padding: 0;
+  margin: 0 auto;
+  width: 220px;
+  border-radius: 4px;
+  text-align: left;
+}
+#suggestions li {
+  padding: 6px;
+  cursor: pointer;
+}
+#suggestions li:hover {
+  background-color: #444;
+}
+/* Collapsible How to Play */
+.howto {
+  margin-top: 20px;
+  text-align: left;
+  background: #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.howto-header {
+  padding: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  background: #333;
+}
+.howto-content {
+  display: none;
+  padding: 10px;
+  font-size: 14px;
+}
 </style>
 </head>
 <body>
@@ -65,7 +155,7 @@
     <thead>
       <tr>
         <th>Item</th>
-        <th>Release</th>
+        <th>Equip Level</th>
         <th>Stackable</th>
         <th>Class Type</th>
         <th>Tradable</th>
@@ -76,33 +166,65 @@
   </table>
 
   <p id="result"></p>
+
+  <!-- How to Play (Collapsible) -->
+  <div class="howto">
+    <div class="howto-header" id="howto-toggle">How to Play +</div>
+    <div class="howto-content" id="howto-content">
+      <p><strong>Goal:</strong> Guess the hidden MapleLegends item of the day.</p>
+      <p><strong>Colors:</strong></p>
+      <ul>
+        <li>🟩 Green = Exact match</li>
+        <li>🟨 Yellow = Partial match (close equip level ±5, same drop type but wrong source)</li>
+        <li>🟥 Red = No match</li>
+      </ul>
+      <p><strong>Equip Level:</strong> ↑ means the real item requires a higher level, ↓ means lower.</p>
+      <p>Keep guessing until you find the correct item!</p>
+    </div>
+  </div>
 </div>
 
 <script>
-// ================= TEST DATA =================
+// ===== Items Data =====
 const items = [
-  { name: "Zakum Helmet", release: "v62", stackable: false, classType: "Helmet", tradable: false, droppedBy: "Zakum" },
-  { name: "Onyx Apple", release: "v62", stackable: true, classType: "Consumable", tradable: true, droppedBy: "Crimson Balrog" },
-  { name: "Stormcaster Gloves", release: "v62", stackable: false, classType: "Gloves", tradable: true, droppedBy: "Crimsonwood Keep Boss" },
-  { name: "Chaos Scroll 60%", release: "v62", stackable: true, classType: "Scroll", tradable: true, droppedBy: "Gachapon - Kerning" }
+  { name: "Zakum Helmet", equipLevel: 50, stackable: false, classType: "Helmet", tradable: false, droppedBy: "Zakum" },
+  { name: "Onyx Apple", equipLevel: null, stackable: true, classType: "Consumable", tradable: true, droppedBy: "Crimson Balrog" },
+  { name: "Chaos Scroll 60%", equipLevel: null, stackable: true, classType: "Scroll", tradable: false, droppedBy: "Gachapon - Kerning" },
+  { name: "Facestompers", equipLevel: 50, stackable: false, classType: "Shoes", tradable: true, droppedBy: "Scarlion" },
+  { name: "White Scroll", equipLevel: null, stackable: true, classType: "Scroll", tradable: true, droppedBy: "Gachapon - Kerning" },
+  { name: "Mark of Naricain", equipLevel: 110, stackable: false, classType: "Pendant", tradable: true, droppedBy: "CWKPQ" },
+  { name: "Balanced Fury", equipLevel: null, stackable: true, classType: "Throwing Star", tradable: true, droppedBy: "Gachapon - Perion" },
+  { name: "Ravana Helmet", equipLevel: 70, stackable: false, classType: "Helmet", tradable: false, droppedBy: "Ravana" },
+  { name: "Crimson Arcglaive", equipLevel: 100, stackable: false, classType: "Spear", tradable: true, droppedBy: "Gachapon - Perion" }
 ];
 
-// ================= MENU LOGIC =================
+// ===== Menu Logic =====
 document.getElementById("play-items").addEventListener("click", () => {
   document.getElementById("menu").style.display = "none";
   document.getElementById("game").style.display = "block";
   startGame(items);
 });
-
-// Menu button via title
 document.getElementById("title").addEventListener("click", () => {
   document.getElementById("menu").style.display = "flex";
   document.getElementById("game").style.display = "none";
 });
 
-// ================= GAME FUNCTION =================
+// ===== How to Play Toggle =====
+document.getElementById("howto-toggle").addEventListener("click", () => {
+  const content = document.getElementById("howto-content");
+  const toggle = document.getElementById("howto-toggle");
+  if (content.style.display === "block") {
+    content.style.display = "none";
+    toggle.textContent = "How to Play +";
+  } else {
+    content.style.display = "block";
+    toggle.textContent = "How to Play –";
+  }
+});
+
+// ===== Game Logic =====
 function startGame(pool) {
-  const today = new Date().toDateString(); // reset daily
+  const today = new Date().toDateString();
   const todayIndex = new Date().getDate() % pool.length;
   const answer = pool[todayIndex];
   let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || { date: today, guesses: [] };
@@ -122,11 +244,11 @@ function startGame(pool) {
   guessesData.guesses.forEach(g => addGuessToTable(g));
 
   function addGuessToTable(item) {
-    if (!item) return;
     const row = document.createElement("tr");
+    if (item.name === answer.name) row.classList.add("answer-row");
     row.innerHTML = `
       <td class="${item.name === answer.name ? 'green' : 'red'}">${item.name}</td>
-      <td class="${item.release === answer.release ? 'green' : 'red'}">${item.release}</td>
+      <td class="${equipLevelColor(item.equipLevel, answer.equipLevel)}">${equipLevelDisplay(item.equipLevel, answer.equipLevel)}</td>
       <td class="${item.stackable === answer.stackable ? 'green' : 'red'}">${item.stackable ? 'Yes' : 'No'}</td>
       <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
       <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
@@ -135,6 +257,18 @@ function startGame(pool) {
     tableBody.appendChild(row);
   }
 
+  function equipLevelColor(guess, correct) {
+    if (guess === correct) return 'green';
+    if (guess != null && correct != null && Math.abs(guess - correct) <= 5) return 'yellow';
+    return 'red';
+  }
+  function equipLevelDisplay(guess, correct) {
+    if (guess == null) return "—";
+    let arrow = "";
+    if (correct != null && guess < correct) arrow = " ↑";
+    if (correct != null && guess > correct) arrow = " ↓";
+    return guess + arrow;
+  }
   function dropColor(guessDrop, answerDrop) {
     if (guessDrop === answerDrop) return 'green';
     const guessIsMob = !guessDrop.toLowerCase().includes("gachapon");
@@ -169,17 +303,14 @@ function startGame(pool) {
       alert("Already guessed that!");
       return;
     }
-
     const item = pool.find(i => i.name.toLowerCase() === userGuess);
     if (!item) {
       alert("Item not found in database.");
       return;
     }
-
     guessesData.guesses.push(item);
     localStorage.setItem("guesses_items", JSON.stringify(guessesData));
     addGuessToTable(item);
-
     if (item.name.toLowerCase() === answer.name.toLowerCase()) {
       result.textContent = `🎉 Correct! You got it in ${guessesData.guesses.length} guesses.`;
       result.style.color = "#6dff6d";
@@ -189,9 +320,9 @@ function startGame(pool) {
     }
     guessInput.value = "";
     suggestionBox.innerHTML = "";
+    guessInput.focus();
   });
 }
 </script>
-
 </body>
 </html>
