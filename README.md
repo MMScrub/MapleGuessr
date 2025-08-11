@@ -21,7 +21,7 @@ Guess the hidden item by entering names — the table will give you feedback on 
    - <span style="color:#7b3fe4">[Gachapon]</span> = Obtained from a gachapon machine 🎰
    - <span style="color:#8a5a2b">[Quest]</span> = Obtained from a quest or crafting 📜
    - <span style="color:#555">[Mob]</span> = Dropped by a monster/boss 🐉
-   - <span style="color:#2aa198">[Store]</span> = Optained from stores 🏪
+   - <span style="color:#2aa198">[Store]</span> = Obtained from stores 🏪
 6. 🔄 Keep guessing until you find the correct item!
 
 ## 🛠 Development Notes
