@@ -1,7 +1,7 @@
 [
   { name: "Zakum Helmet", minLevel: 50, maxLevel: 50, stackable: false, classType: "Helmet", tradable: false, droppedBy: "Zakum" },
   { name: "Horntail Pendant", minLevel: 120, maxLevel: 120, stackable: false, classType: "Pendant", tradable: false, droppedBy: "Horntail" },
-  { name: "Dragon Khanjar", minLevel: 110, maxLevel: 110, stackable: false, classType: "Shield", tradable: true, droppedBy: "Nibelung", "Core Blaze", "Nameless Magic Monster", "Dunas", "AfterLord", "Bergamot" },
+  { name: "Dragon Khanjar", minLevel: 110, maxLevel: 110, stackable: false, classType: "Shield", tradable: true, droppedBy: "Nibelung" },
   { name: "Facestompers", minLevel: 150, maxLevel: 150, stackable: false, classType: "Shoes", tradable: true, droppedBy: "Pink Bean" },
   { name: "Mark of Naricain", minLevel: 110, maxLevel: 110, stackable: false, classType: "Pendant", tradable: false, droppedBy: "CWKPQ" },
   { name: "Ravana Helmet", minLevel: 50, maxLevel: 90, stackable: false, classType: "Helmet", tradable: false, droppedBy: "Quest - Ravana" },
