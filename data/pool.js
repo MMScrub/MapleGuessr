@@ -1,0 +1,22 @@
+export const pool = [
+  // ===== Boss Equipment Drops =====
+  { name: "Zakum Helmet", minLevel: 50, maxLevel: 50, stackable: false, classType: "Helmet", tradable: false, droppedBy: "Zakum" },
+  { name: "Horntail Pendant", minLevel: 120, maxLevel: 120, stackable: false, classType: "Pendant", tradable: false, droppedBy: "Horntail" },
+  { name: "Dragon Khanjar", minLevel: 110, maxLevel: 110, stackable: false, classType: "Shield", tradable: true, droppedBy: ["Nibelung", "Core Blaze", "Nameless Magic Monster", "Dunas", "AfterLord", "Bergamot"] },
+  { name: "Facestompers", minLevel: 150, maxLevel: 150, stackable: false, classType: "Shoes", tradable: true, droppedBy: "Pink Bean" },
+  { name: "Mark of Naricain", minLevel: 110, maxLevel: 110, stackable: false, classType: "Pendant", tradable: false, droppedBy: "CWKPQ" },
+  { name: "Ravana Helmet", minLevel: 50, maxLevel: 90, stackable: false, classType: "Helmet", tradable: false, droppedBy: "Quest - Ravana" },
+  { name: "Balanced Fury", minLevel: 70, maxLevel: 70, stackable: true, classType: "Throwing Star", tradable: true, droppedBy: "Quest - Crafted" },
+
+  // ===== Boss Chairs =====
+  { name: "Zakum Chair", minLevel: null, maxLevel: null, stackable: false, classType: "Chair", tradable: false, droppedBy: "Zakum" },
+  { name: "Horntail Chair", minLevel: null, maxLevel: null, stackable: false, classType: "Chair", tradable: false, droppedBy: "Horntail" },
+  { name: "Pink Bean Chair", minLevel: null, maxLevel: null, stackable: false, classType: "Chair", tradable: false, droppedBy: "Pink Bean" },
+
+  // ===== Consumables =====
+  { name: "Onyx Apple", minLevel: null, maxLevel: null, stackable: true, classType: "Consumable", tradable: true, droppedBy: "Amoria PQ" },
+
+  // ===== Scrolls (Unique Only) =====
+  { name: "White Scroll", minLevel: null, maxLevel: null, stackable: true, classType: "Scroll", tradable: false, droppedBy: "Gachapon" },
+  { name: "Chaos Scroll 60%", minLevel: null, maxLevel: null, stackable: true, classType: "Scroll", tradable: false, droppedBy: "Gachapon" }
+];
