@@ -17,16 +17,17 @@ Every day, there’s a **new hidden MapleLegends item** to guess. Use clues like
 
 ---
 
-## 📅 v0.2 Early Access Changelog
-**New Features**
-- Equip Level column with up/down arrows and ±5 yellow highlight.
-- Added **Crimson Arcglaive** as a post-v62/custom item.
-- Collapsible **"How to Play"** section.
-  
-**Improvements**
-- Auto-focus on input after each guess.
-- Highlight correct guess row.
-- Better drop source feedback (mob vs gachapon vs wrong).
+## 📅 v0.2.2 Early Access Changelog
+
+New Features
+- Source-type badges added in Dropped By column: [Mob], [Gachapon], [PQ]
+- Color feedback for drop sources now works with badges
+- Updated "How to Play" to explain badges
+
+Improvements
+- Auto-focus on input after each guess
+- Highlight correct guess row
+- Better drop source feedback (mob vs gachapon vs wrong)
 
 ---
 
