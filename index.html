@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MapleGuessr</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MapleGuessr v0.2.4 (Early Access)</title>
 <style>
 /* ===== UI & Layout Styling ===== */
 body { font-family: Arial, sans-serif; background:#1a1a1a; color:#f0f0f0; text-align:center; padding:20px; }
@@ -87,6 +87,7 @@ th { background:#333; }
 <!-- Game -->
 <div id="game" class="game-container">
   <h2 id="game-title">Items</h2>
+
   <div id="mode" class="mode-indicator"></div>
   <div id="guess-counter" class="counter"></div>
 
@@ -136,130 +137,259 @@ th { background:#333; }
   </div>
 </div>
 
-<!-- Main Game Logic -->
-<script type="module">
-import { pool as POOL } from './data/pool.js';
+<script>
+/* ================= Load data from /data/pool.json ================= */
+async function loadPoolData() {
+  const res = await fetch('data/pool.json');
+  if (!res.ok) throw new Error('Missing data/pool.json');
+  return res.json();
+}
 
-async function loadPoolData() { return POOL; }
+/* ================= Dev Buttons ================= */
+document.getElementById("reset-btn").addEventListener("click", () => {
+  localStorage.clear();
+  location.reload();
+});
+document.getElementById("random-btn").addEventListener("click", () => {
+  const idx = Math.floor(Math.random() * (window.__POOL__?.length || 1));
+  localStorage.setItem("dev_force_index", String(idx));
+  localStorage.setItem("guesses_items", JSON.stringify({ date: new Date().toDateString(), guesses: [] }));
+  location.reload();
+});
+document.getElementById("daily-btn").addEventListener("click", () => {
+  localStorage.removeItem("dev_force_index");
+  localStorage.setItem("guesses_items", JSON.stringify({ date: new Date().toDateString(), guesses: [] }));
+  location.reload();
+});
+document.getElementById("next-btn").addEventListener("click", () => {
+  const len = window.__POOL__?.length || 1;
+  const current = parseInt(localStorage.getItem("dev_force_index") ?? "-1", 10);
+  const next = isNaN(current) ? 0 : (current + 1) % len;
+  localStorage.setItem("dev_force_index", String(next));
+  localStorage.setItem("guesses_items", JSON.stringify({ date: new Date().toDateString(), guesses: [] }));
+  location.reload();
+});
+document.getElementById("reveal-btn").addEventListener("click", () => {
+  const ans = getAnswerFromPool(window.__POOL__ || []);
+  document.getElementById("reveal").textContent = `Answer (Dev): ${ans?.name || '—'}`;
+});
 
-/* Dev buttons */
-document.getElementById("reset-btn").addEventListener("click", () => { localStorage.clear(); location.reload(); });
-document.getElementById("random-btn").addEventListener("click", () => { const idx=Math.floor(Math.random()* (window.__POOL__?.length||1)); localStorage.setItem("dev_force_index", String(idx)); localStorage.setItem("guesses_items", JSON.stringify({date:new Date().toDateString(),guesses:[]})); location.reload(); });
-document.getElementById("daily-btn").addEventListener("click", () => { localStorage.removeItem("dev_force_index"); localStorage.setItem("guesses_items", JSON.stringify({date:new Date().toDateString(),guesses:[]})); location.reload(); });
-document.getElementById("next-btn").addEventListener("click", () => { const len=window.__POOL__?.length||1; const current=parseInt(localStorage.getItem("dev_force_index")??"-1",10); const next=isNaN(current)?0:(current+1)%len; localStorage.setItem("dev_force_index", String(next)); localStorage.setItem("guesses_items", JSON.stringify({date:new Date().toDateString(),guesses:[]})); location.reload(); });
-document.getElementById("reveal-btn").addEventListener("click", () => { const ans=getAnswerFromPool(window.__POOL__||[]); document.getElementById("reveal").textContent=`Answer (Dev): ${ans?.name||'—'}`; });
-
-/* Menu + How-to */
+/* ================= Menu + How-to ================= */
 document.getElementById("play-items").addEventListener("click", async () => {
   document.getElementById("menu").style.display = "none";
   document.getElementById("game").style.display = "block";
+
   const pool = await loadPoolData();
-  window.__POOL__ = pool;
-  window.__SUGGEST_INDEX__ = pool;
+  window.__POOL__ = pool;             // keep globally for dev tools
+  window.__SUGGEST_INDEX__ = pool;    // same list for autocomplete now
+
   startGame(pool);
 });
-document.getElementById("title").addEventListener("click", () => { document.getElementById("menu").style.display="flex"; document.getElementById("game").style.display="none"; });
-document.getElementById("howto-toggle").addEventListener("click", () => {
-  const c = document.getElementById("howto-content"); const t = document.getElementById("howto-toggle");
-  if (c.style.display === "block") { c.style.display="none"; t.textContent="How to Play +"; }
-  else { c.style.display="block"; t.textContent="How to Play –"; }
+
+document.getElementById("title").addEventListener("click", () => {
+  document.getElementById("menu").style.display = "flex";
+  document.getElementById("game").style.display = "none";
 });
 
-/* Answer selection */
-function getAnswerFromPool(pool){
+document.getElementById("howto-toggle").addEventListener("click", () => {
+  const content = document.getElementById("howto-content");
+  const toggle = document.getElementById("howto-toggle");
+  if (content.style.display === "block") { content.style.display = "none"; toggle.textContent = "How to Play +"; }
+  else { content.style.display = "block"; toggle.textContent = "How to Play –"; }
+});
+
+/* ================= Answer selection ================= */
+function getAnswerFromPool(pool) {
   const forced = localStorage.getItem("dev_force_index");
-  if (forced !== null) { const idx=Math.max(0, Math.min(pool.length-1, parseInt(forced,10)||0)); return pool[idx]; }
+  if (forced !== null) {
+    const idx = Math.max(0, Math.min(pool.length - 1, parseInt(forced, 10) || 0));
+    return pool[idx];
+  }
   const todayIndex = new Date().getDate() % pool.length;
   return pool[todayIndex];
 }
-function isRandomMode(){ return localStorage.getItem("dev_force_index") !== null; }
+function isRandomMode() {
+  return localStorage.getItem("dev_force_index") !== null;
+}
 
-/* Helpers: badges, names, ranges, multi-source */
-function getDropType(src){ const s=(src||"").toLowerCase(); if(s.includes("gachapon")) return "gachapon"; if(s.includes("pq")) return "pq"; if(s.includes("quest")) return "quest"; return "mob"; }
-function formatOneSource(src){ const t=getDropType(src); const cls=t==="pq"?"pq":t==="gachapon"?"gach":t==="quest"?"quest":"mob"; const label=t==="pq"?"[PQ]":t==="gachapon"?"[Gachapon]":t==="quest"?"[Quest]":"[Mob]"; return `<span class="badge ${cls}">${label}</span>${src}`; }
-function formatSourceWithBadge(src){ const list=Array.isArray(src)?src:(src?[src]:[]); if(!list.length) return ""; const first=formatOneSource(list[0]); const moreCount=list.length-1; const more=moreCount>0?` <span style="opacity:.85;">(+${moreCount} more)</span>`:""; const title=list.join(", "); return `<span title="${title}">${first}${more}</span>`; }
-function dropColor(guessDrop, answerDrop){
-  const gList=Array.isArray(guessDrop)?guessDrop:(guessDrop?[guessDrop]:[]);
-  const aList=Array.isArray(answerDrop)?answerDrop:(answerDrop?[answerDrop]:[]);
-  for (const g of gList) for (const a of aList) { if ((g||"")===(a||"")) return "green"; }
-  for (const g of gList) for (const a of aList) { if (getDropType(g)===getDropType(a)) return "yellow"; }
+/* ================= Helpers: badges, names, ranges, multi-source ================= */
+function getDropType(src) {
+  const s = (src || "").toLowerCase();
+  if (s.includes("gachapon")) return "gachapon";
+  if (s.includes("pq"))       return "pq";
+  if (s.includes("quest"))    return "quest";
+  return "mob";
+}
+function formatOneSource(src) {
+  const t = getDropType(src);
+  const cls   = t === "pq" ? "pq" : t === "gachapon" ? "gach" : t === "quest" ? "quest" : "mob";
+  const label = t === "pq" ? "[PQ]" : t === "gachapon" ? "[Gachapon]" : t === "quest" ? "[Quest]" : "[Mob]";
+  return `<span class="badge ${cls}">${label}</span>${src}`;
+}
+// Accept string OR array; show first + "(+N more)" and full list on hover tooltip
+function formatSourceWithBadge(src) {
+  const list = Array.isArray(src) ? src : (src ? [src] : []);
+  if (list.length === 0) return "";
+  const first = formatOneSource(list[0]);
+  const moreCount = list.length - 1;
+  const more = moreCount > 0 ? ` <span style="opacity:.85;">(+${moreCount} more)</span>` : "";
+  const title = list.join(", ");
+  return `<span title="${title}">${first}${more}</span>`;
+}
+// Scoring: GREEN if any exact source matches; YELLOW if any type matches; else RED
+function dropColor(guessDrop, answerDrop) {
+  const gList = Array.isArray(guessDrop) ? guessDrop : (guessDrop ? [guessDrop] : []);
+  const aList = Array.isArray(answerDrop) ? answerDrop : (answerDrop ? [answerDrop] : []);
+
+  for (const g of gList) for (const a of aList) {
+    if ((g || "") === (a || "")) return "green";
+  }
+  for (const g of gList) for (const a of aList) {
+    if (getDropType(g) === getDropType(a)) return "yellow";
+  }
   return "red";
 }
-function highlightName(guessName, answerName){
-  const aSet=new Set(answerName.split(/\s+/).map(s=>s.toLowerCase()));
-  return guessName.split(/\s+/).map(w=>aSet.has(w.toLowerCase())?`<b>${w}</b>`:w).join(' ');
+function highlightName(guessName, answerName) {
+  const aSet = new Set(answerName.split(/\s+/).map(s => s.toLowerCase()));
+  return guessName.split(/\s+/).map(w => aSet.has(w.toLowerCase()) ? `<b>${w}</b>` : w).join(' ');
 }
 
 /* Range helpers */
-function bothNull(aMin,aMax,bMin,bMax){ return aMin==null&&aMax==null&&bMin==null&&bMax==null; }
-function anyNull(aMin,aMax,bMin,bMax){ return (aMin==null||aMax==null)||(bMin==null||bMax==null); }
-function rangesOverlap(gMin,gMax,aMin,aMax){ return !(gMax<aMin||aMax<gMin); }
-function rangeGap(gMin,gMax,aMin,aMax){ if(rangesOverlap(gMin,gMax,aMin,aMax)) return 0; if(gMax<aMin) return aMin-gMax; return gMin-aMax; }
-function levelColor(gMin,gMax,aMin,aMax){ if(bothNull(gMin,gMax,aMin,aMax)) return 'green'; if(anyNull(gMin,gMax,aMin,aMax)) return 'red'; if(rangesOverlap(gMin,gMax,aMin,aMax)) return 'green'; return rangeGap(gMin,gMax,aMin,aMax)<=5?'yellow':'red'; }
-function levelDisplay(gMin,gMax,aMin,aMax){ if(gMin==null||gMax==null) return "—"; const text=(gMin===gMax)?`${gMax}`:`${gMin}–${gMax}`; if(aMin==null||aMax==null) return text; if(rangesOverlap(gMin,gMax,aMin,aMax)) return `${text} ✓`; if(gMax<aMin) return `${text} ↑`; if(gMin>aMax) return `${text} ↓`; return text; }
+function bothNull(aMin, aMax, bMin, bMax) {
+  return aMin == null && aMax == null && bMin == null && bMax == null;
+}
+function anyNull(aMin, aMax, bMin, bMax) {
+  const aNull = (aMin == null || aMax == null);
+  const bNull = (bMin == null || bMax == null);
+  return aNull || bNull;
+}
+function rangesOverlap(gMin, gMax, aMin, aMax) {
+  return !(gMax < aMin || aMax < gMin);
+}
+function rangeGap(gMin, gMax, aMin, aMax) {
+  if (rangesOverlap(gMin, gMax, aMin, aMax)) return 0;
+  if (gMax < aMin) return aMin - gMax;   // guess below answer
+  return gMin - aMax;                     // guess above answer
+}
+// Color logic: green = overlap; yellow = gap ≤ 5; red = far/no data
+function levelColor(gMin, gMax, aMin, aMax) {
+  if (bothNull(gMin, gMax, aMin, aMax)) return 'green';
+  if (anyNull(gMin, gMax, aMin, aMax))  return 'red';
+  if (rangesOverlap(gMin, gMax, aMin, aMax)) return 'green';
+  return rangeGap(gMin, gMax, aMin, aMax) <= 5 ? 'yellow' : 'red';
+}
+// Display: "—" for non-equipables; "min–max" or single; add ✓ / ↑ / ↓
+function levelDisplay(gMin, gMax, aMin, aMax) {
+  if (gMin == null || gMax == null) return "—";
+  const text = (gMin === gMax) ? `${gMax}` : `${gMin}–${gMax}`;
+  if (aMin == null || aMax == null) return text; // answer not equipable
+  if (rangesOverlap(gMin, gMax, aMin, aMax)) return `${text} ✓`;
+  if (gMax < aMin) return `${text} ↑`; // need higher
+  if (gMin > aMax) return `${text} ↓`; // need lower
+  return text;
+}
 
-/* Game Logic */
-function startGame(pool){
-  const modeEl=document.getElementById("mode");
-  modeEl.innerHTML=isRandomMode()?`Mode: <span class="random">Random (Dev)</span>`:`Mode: <span class="daily">Daily</span>`;
-  const answer=getAnswerFromPool(pool);
-  const today=new Date().toDateString();
-  let guessesData=JSON.parse(localStorage.getItem("guesses_items"))||{date:today,guesses:[]};
-  if(guessesData.date!==today && !isRandomMode()){ guessesData={date:today,guesses:[]}; localStorage.setItem("guesses_items", JSON.stringify(guessesData)); }
-  const guessInput=document.getElementById("guess-input");
-  const submitBtn=document.getElementById("submit-btn");
-  const tableBody=document.querySelector("#guess-table tbody");
-  const result=document.getElementById("result");
-  const suggestionBox=document.getElementById("suggestions");
-  const counterEl=document.getElementById("guess-counter");
+/* ================= Game Logic ================= */
+function startGame(pool) {
+  const modeEl = document.getElementById("mode");
+  modeEl.innerHTML = isRandomMode()
+    ? `Mode: <span class="random">Random (Dev)</span>`
+    : `Mode: <span class="daily">Daily</span>`;
 
-  tableBody.innerHTML=""; updateCounter(); guessInput.focus();
-  (guessesData.guesses||[]).forEach(g=>addGuessToTable(g));
+  const answer = getAnswerFromPool(pool);
+  const today = new Date().toDateString();
 
-  function updateCounter(){ counterEl.textContent=`Guess #${(guessesData.guesses?.length||0)+1}`; }
+  // per-day guesses (kept even with random mode toggle)
+  let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || { date: today, guesses: [] };
+  if (guessesData.date !== today && !isRandomMode()) {
+    guessesData = { date: today, guesses: [] };
+    localStorage.setItem("guesses_items", JSON.stringify(guessesData));
+  }
 
-  function addGuessToTable(item){
-    const row=document.createElement("tr");
-    if(item.name===answer.name) row.classList.add("answer-row");
+  const guessInput = document.getElementById("guess-input");
+  const submitBtn = document.getElementById("submit-btn");
+  const tableBody = document.querySelector("#guess-table tbody");
+  const result = document.getElementById("result");
+  const suggestionBox = document.getElementById("suggestions");
+  const counterEl = document.getElementById("guess-counter");
+
+  tableBody.innerHTML = "";
+  updateCounter();
+  guessInput.focus();
+
+  // render prior guesses
+  (guessesData.guesses || []).forEach(g => addGuessToTable(g));
+
+  function updateCounter() {
+    counterEl.textContent = `Guess #${(guessesData.guesses?.length || 0) + 1}`;
+  }
+
+  function addGuessToTable(item) {
+    const row = document.createElement("tr");
+    if (item.name === answer.name) row.classList.add("answer-row");
     row.innerHTML = `
-      <td class="${item.name===answer.name?'green':'red'} name-partial">${highlightName(item.name, answer.name)}</td>
-      <td class="${levelColor(item.minLevel,item.maxLevel,answer.minLevel,answer.maxLevel)}">${levelDisplay(item.minLevel,item.maxLevel,answer.minLevel,answer.maxLevel)}</td>
-      <td class="${item.stackable===answer.stackable?'green':'red'}">${item.stackable?'Yes':'No'}</td>
-      <td class="${item.classType===answer.classType?'green':'red'}">${item.classType}</td>
-      <td class="${item.tradable===answer.tradable?'green':'red'}">${item.tradable?'Yes':'No'}</td>
-      <td class="${dropColor(item.droppedBy,answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
+      <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
+      <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
+      <td class="${item.stackable === answer.stackable ? 'green' : 'red'}">${item.stackable ? 'Yes' : 'No'}</td>
+      <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
+      <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
+      <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
     `;
     tableBody.appendChild(row);
   }
 
+  // Suggestions (use the same pool for now)
   guessInput.addEventListener("input", () => {
-    const val=guessInput.value.trim().toLowerCase();
-    suggestionBox.innerHTML=""; if(!val) return;
-    const src=window.__SUGGEST_INDEX__||pool;
-    src.filter(e=>e.name.toLowerCase().includes(val)).slice(0,8).forEach(match=>{
-      const li=document.createElement("li");
-      li.textContent=match.name;
-      li.onclick=()=>{ guessInput.value=match.name; suggestionBox.innerHTML=""; };
+    const val = guessInput.value.trim().toLowerCase();
+    suggestionBox.innerHTML = "";
+    if (!val) return;
+
+    const src = window.__SUGGEST_INDEX__ || pool;
+    const matches = src.filter(e => e.name.toLowerCase().includes(val));
+    matches.slice(0, 8).forEach(match => {
+      const li = document.createElement("li");
+      li.textContent = match.name;
+      li.onclick = () => {
+        guessInput.value = match.name;
+        suggestionBox.innerHTML = "";
+      };
       suggestionBox.appendChild(li);
     });
   });
 
+  // Submit guess
   submitBtn.addEventListener("click", () => {
-    const userGuess=guessInput.value.trim().toLowerCase();
-    if(!userGuess) return;
-    if((guessesData.guesses||[]).find(g=>g.name.toLowerCase()===userGuess)){ alert("Already guessed that!"); guessInput.focus(); return; }
-    const item=pool.find(i=>i.name.toLowerCase()===userGuess);
-    if(!item){ alert("Item not found in pool."); guessInput.focus(); return; }
+    const userGuess = guessInput.value.trim().toLowerCase();
+    if (!userGuess) return;
+
+    if ((guessesData.guesses || []).find(g => g.name.toLowerCase() === userGuess)) {
+      alert("Already guessed that!");
+      guessInput.focus();
+      return;
+    }
+    const item = pool.find(i => i.name.toLowerCase() === userGuess);
+    if (!item) {
+      alert("Item not found in pool.");
+      guessInput.focus();
+      return;
+    }
 
     guessesData.guesses.push(item);
     localStorage.setItem("guesses_items", JSON.stringify(guessesData));
     addGuessToTable(item);
 
-    if(item.name.toLowerCase()===answer.name.toLowerCase()){
-      result.textContent=`🎉 Correct! You got it in ${guessesData.guesses.length} guesses.`; result.style.color="#6dff6d";
-    } else { result.textContent="Not quite, try again."; result.style.color="#ff7a7a"; }
+    if (item.name.toLowerCase() === answer.name.toLowerCase()) {
+      result.textContent = `🎉 Correct! You got it in ${guessesData.guesses.length} guesses.`;
+      result.style.color = "#6dff6d";
+    } else {
+      result.textContent = "Not quite, try again.";
+      result.style.color = "#ff7a7a";
+    }
 
-    updateCounter(); guessInput.value=""; suggestionBox.innerHTML=""; guessInput.focus();
+    updateCounter();
+    guessInput.value = "";
+    suggestionBox.innerHTML = "";
+    guessInput.focus();
   });
 }
 </script>
