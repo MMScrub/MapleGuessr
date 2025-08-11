@@ -28,7 +28,7 @@ h1 { cursor: pointer; color: #6d88ff; margin-bottom: 8px; }
 .game-container { display: none; max-width: 980px; margin: 0 auto; }
 
 input { padding: 8px; width: 260px; margin-top: 10px; border-radius: 6px; border: none; }
-button#submit-btn { padding: 8px 14px; margin-left: 5px; cursor: pointer; background: #6d88ff; border: none; border-radius: 6px; color: white; }
+button#submit-btn { padding: 8px 14px; ; margin-left: 5px; margin-top: 2px; cursor: pointer; background: #6d88ff; border: none; border-radius: 6px; color: white; }
 
 table { width: 100%; border-collapse: collapse; margin-top: 15px; }
 th, td { padding: 8px; border: 1px solid #555; }
@@ -133,15 +133,15 @@ th { background: #333; }
 <script>
 // ===== Items Data (MapleLegends-aligned) =====
 const items = [
-  { name: "Zakum Helmet",      equipLevel: 50,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Zakum" },
-  { name: "Onyx Apple",        equipLevel: null,stackable: true,  classType: "Consumable",    tradable: true,  droppedBy: "Amoria PQ" },
-  { name: "Chaos Scroll 60%",  equipLevel: null,stackable: true,  classType: "Scroll",        tradable: false, droppedBy: "Gachapon" },
-  { name: "Facestompers",      equipLevel: 50,  stackable: false, classType: "Shoes",         tradable: true,  droppedBy: "PinkBean" },
-  { name: "White Scroll",      equipLevel: null,stackable: true,  classType: "Scroll",        tradable: false, droppedBy: "Gachapon" },
-  { name: "Mark of Naricain",  equipLevel: 110, stackable: false, classType: "Pendant",       tradable: true,  droppedBy: "CWKPQ" },
-  { name: "Balanced Fury",     equipLevel: null,stackable: true,  classType: "Throwing Star", tradable: true,  droppedBy: "Quest - Crafted" },
-  { name: "Ravana Helmet",     equipLevel: 70,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Quest - Ravana" },
-  { name: "Crimson Arcglaive", equipLevel: 100, stackable: false, classType: "Spear",         tradable: true,  droppedBy: "Gachapon - Perion" }
+  { name: "Zakum Helmet",      minLevel: 50,  maxLevel: 50,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Zakum" },
+  { name: "Onyx Apple",        minLevel: null,maxLevel: null,stackable: true,  classType: "Consumable",    tradable: true,  droppedBy: "Amoria PQ" },
+  { name: "Chaos Scroll 60%",  minLevel: null,maxLevel: null,stackable: true,  classType: "Scroll",        tradable: false, droppedBy: "Gachapon" },
+  { name: "Facestompers",      minLevel: 150, maxLevel: 150, stackable: false, classType: "Shoes",         tradable: true,  droppedBy: "PinkBean" },
+  { name: "White Scroll",      minLevel: null,maxLevel: null,stackable: true,  classType: "Scroll",        tradable: false, droppedBy: "Gachapon" },
+  { name: "Mark of Naricain",  minLevel: 110, maxLevel: 110, stackable: false, classType: "Pendant",       tradable: true,  droppedBy: "CWKPQ" },
+  { name: "Balanced Fury",     minLevel: 70,  maxLevel: 70,  stackable: true,  classType: "Throwing Star", tradable: true,  droppedBy: "Quest - Crafted" },
+  { name: "Ravana Helmet",     minLevel: 50,  maxLevel: 90,  stackable: false, classType: "Helmet",        tradable: false, droppedBy: "Quest - Ravana" },
+  { name: "Crimson Arcglaive", minLevel: 100, maxLevel: 100, stackable: false, classType: "Spear",         tradable: true,  droppedBy: "Quest - Exchange" }
 ];
 
 // ===== Dev Buttons =====
@@ -225,17 +225,49 @@ function dropColor(guessDrop, answerDrop) {
   if (gType === aType) return 'yellow'; // same type, different specific source
   return 'red';
 }
-function equipLevelColor(guess, correct) {
-  if (guess === correct) return 'green';
-  if (guess != null && correct != null && Math.abs(guess - correct) <= 5) return 'yellow';
-  return 'red';
+function bothNull(aMin, aMax, bMin, bMax) {
+  return aMin == null && aMax == null && bMin == null && bMax == null;
 }
+function anyNull(aMin, aMax, bMin, bMax) {
+  const aNull = (aMin == null || aMax == null);
+  const bNull = (bMin == null || bMax == null);
+  return aNull || bNull;
+}
+function rangesOverlap(gMin, gMax, aMin, aMax) {
+  return !(gMax < aMin || aMax < gMin);
+}
+function rangeGap(gMin, gMax, aMin, aMax) {
+  if (rangesOverlap(gMin, gMax, aMin, aMax)) return 0;
+  if (gMax < aMin) return aMin - gMax;   // guess below answer
+  return gMin - aMax;                     // guess above answer
+}
+
+// Color logic: green = overlap; yellow = gap ≤ 5; red = far/no data
+function levelColor(gMin, gMax, aMin, aMax) {
+  if (bothNull(gMin, gMax, aMin, aMax)) return 'green';
+  if (anyNull(gMin, gMax, aMin, aMax))  return 'red';
+  if (rangesOverlap(gMin, gMax, aMin, aMax)) return 'green';
+  return rangeGap(gMin, gMax, aMin, aMax) <= 5 ? 'yellow' : 'red';
+}
+
+// Display: "—" for non-equipables; "min–max" or single; add ✓ / ↑ / ↓
+function levelDisplay(gMin, gMax, aMin, aMax) {
+  if (gMin == null || gMax == null) return "—";
+  const text = (gMin === gMax) ? `${gMax}` : `${gMin}–${gMax}`;
+  if (aMin == null || aMax == null) return text; // answer isn't equipable
+  if (rangesOverlap(gMin, gMax, aMin, aMax)) return `${text} ✓`;
+  if (gMax < aMin) return `${text} ↑`; // need higher
+  if (gMin > aMax) return `${text} ↓`; // need lower
+  return text; // (shouldn't reach if we covered overlap)
+}
+   
 function equipLevelDisplay(guess, correct) {
   if (guess == null) return "—";
   if (correct == null) return String(guess); // if answer not equipable, no arrow
   if (guess === correct) return `${guess} ✓`;
   return guess + (guess < correct ? " ↑" : " ↓");
 }
+   
 // Bold shared words between guess name and answer name
 function highlightName(guessName, answerName) {
   const g = guessName.split(/\s+/).map(s => s.toLowerCase());
@@ -283,7 +315,7 @@ function startGame(pool) {
     if (item.name === answer.name) row.classList.add("answer-row");
     row.innerHTML = `
       <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
-      <td class="${equipLevelColor(item.equipLevel, answer.equipLevel)}">${equipLevelDisplay(item.equipLevel, answer.equipLevel)}</td>
+      <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}"> ${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
       <td class="${item.stackable === answer.stackable ? 'green' : 'red'}">${item.stackable ? 'Yes' : 'No'}</td>
       <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
       <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
