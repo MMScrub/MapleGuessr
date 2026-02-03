@@ -1,4 +1,4 @@
-# 🎯 MapleGuessr (Early Access v0.2.4)
+# 🎯 MapleGuessr (Early Early Early (unplayeable) Access v0.2.4)
 
 A daily guessing game for MapleLegends items, inspired by Wordle-style mechanics.  
 Guess the hidden item by entering names — the table will give you feedback on your guess based on stats and source.
