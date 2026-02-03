@@ -1,0 +1,58 @@
+/* ===== UI & Layout Styling ===== */
+body { font-family: Arial, sans-serif; background:#1a1a1a; color:#f0f0f0; text-align:center; padding:20px; }
+h1 { cursor:pointer; color:#6d88ff; margin-bottom:8px; }
+
+.dev-row { margin-bottom:12px; }
+.dev-row button { margin:0 4px 6px 4px; background:#444; color:white; padding:6px 12px; border:none; border-radius:4px; cursor:pointer; }
+#reset-btn { background:#aa4444; }
+#random-btn { background:#4466aa; }
+#daily-btn  { background:#4a7a4a; }
+#next-btn   { background:#6d5499; }
+#reveal-btn { background:#777; }
+
+.mode-indicator { margin:8px 0 6px; font-size:14px; opacity:.9; }
+.mode-indicator .daily { color:#62d26f; }
+.mode-indicator .random { color:#f0c36a; }
+.counter { margin:4px 0 10px; font-size:14px; opacity:.9; }
+
+.menu { display:flex; flex-direction:column; align-items:center; gap:15px; margin-top:26px; }
+.menu button { padding:14px 20px; font-size:18px; border:none; border-radius:8px; cursor:pointer; width:200px; background:#444; color:white; }
+.menu button:hover { background:#666; }
+.wip { font-size:12px; color:#aaa; margin-top:4px; }
+.game-container { display:none; max-width:980px; margin:0 auto; }
+
+input { padding:8px; width:260px; margin-top:10px; border-radius:6px; border:none; }
+button#submit-btn { padding:8px 14px; margin-left:5px; margin-top:2px; cursor:pointer; background:#6d88ff; border:none; border-radius:6px; color:white; }
+
+table { width:100%; border-collapse:collapse; margin-top:15px; }
+th, td { padding:8px; border:1px solid #555; }
+th { background:#333; }
+.green { background:#2e7d32; }
+.yellow { background:#f9a825; }
+.red { background:#c62828; }
+
+/* Correct row: single clean green box */
+.answer-row { font-weight:bold; }
+.answer-row td { border:2px solid #6dff6d !important; }
+.answer-row td + td { border-left:none !important; }
+.answer-row td:last-child { border-right:2px solid #6dff6d !important; }
+
+#suggestions { list-style:none; background:#2a2a2a; padding:0; margin:0 auto; width:260px; max-height:220px; overflow-y:auto; border-radius:4px; text-align:left; }
+#suggestions li { padding:6px; cursor:pointer; }
+#suggestions li:hover { background:#444; }
+
+/* Collapsible How to Play */
+.howto { margin-top:20px; text-align:left; background:#2a2a2a; border-radius:6px; overflow:hidden; }
+.howto-header { padding:10px; cursor:pointer; font-weight:bold; background:#333; }
+.howto-content { display:none; padding:10px; font-size:14px; }
+
+/* Source badges */
+.badge { display:inline-block; padding:2px 6px; border-radius:4px; font-size:12px; margin-right:6px; background:#444; }
+.badge.pq { background:#2b5fff; }     /* PQ blue */
+.badge.gach { background:#7b3fe4; }   /* Gach purple */
+.badge.quest { background:#8a5a2b; }  /* Quest brown */
+.badge.mob { background:#555; }       /* Mob gray */
+.badge.store { background:#2aa198; }  /* teal */
+
+/* Name highlight */
+.name-partial b { color:#fff; }
