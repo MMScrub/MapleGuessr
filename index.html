@@ -123,11 +123,11 @@ th { background:#333; }
       <p><strong>Colors:</strong></p>
       <ul>
         <li>Green = Exact/overlap match</li>
-        <li>Yellow = Close (Equip Level range within ±5, or same source type but different specific source)</li>
+        <li>Yellow = Close (Equip Level range within ±20, or same source type but different specific source)</li>
         <li>Red = No match</li>
       </ul>
       <p><strong>Equip Level (Range):</strong>
-         ✓ when your range overlaps the answer’s range; ↑ means the answer’s range is higher; ↓ means lower; “—” for non‑equipables.</p>
+         ✓ when your range overlaps the answer’s range; ↑ means the answer’s range is higher; ↓ means lower; “—” for Gear without equip levels.</p>
       <p><strong>Source badges:</strong>
         <span class="badge mob">[Mob]</span>
         <span class="badge pq">[PQ]</span>
@@ -141,11 +141,24 @@ th { background:#333; }
 </div>
 
 <script>
-/* ================= Load data from /data/pool.json ================= */
+/* ================= Config ================= */
+const CONFIG = {
+  LEVEL_CLOSE_GAP: 20,
+  MAX_SUGGESTIONS: 8,
+  HINT_STAGES: [3, 5, 7, 9]  // misses before next hint (stage 1 at 3, stage 2 at 5, etc.)
+};
+
+/* ================= Load data from data/pool.json ================= */
 async function loadPoolData() {
-  const res = await fetch('data/pool.json');
-  if (!res.ok) throw new Error('Missing data/pool.json');
-  return res.json();
+  try {
+    const res = await fetch('data/pool.json');
+    if (!res.ok) throw new Error('Missing data/pool.json');
+    return res.json();
+  } catch (e) {
+    if (window.__POOL_EMBED__) return window.__POOL_EMBED__;
+    console.error('Could not load data/pool.json. Open via a local server (e.g. Live Server) or use embedded pool.', e);
+    throw e;
+  }
 }
 
 /* ================= Dev Buttons ================= */
@@ -194,6 +207,36 @@ function sameClasses(a, b) {
   return true;
 }
 
+/* ================= Broad Grouping + Hint Stage ================= */
+
+function broadGroupFromClassType(classType) {
+  const c = (classType || "").toLowerCase();
+
+  const weapons = new Set([
+    "bow","claw","dagger","gun","knuckle","mace","crossbow",
+    "one-handed sword","one-handed axe","one-handed mace",
+    "two-handed sword","two-handed axe","two-handed mace",
+    "polearm","spear","staff","wand"
+  ]);
+  if (weapons.has(c)) return "Weapon";
+
+  const armor = new Set(["hat","top","bottom","overall","cape","gloves","shoes","shield","helmet"]);
+  if (armor.has(c)) return "Armor";
+
+  const acc = new Set(["earrings","eye accessory","face accessory","pendant","ring"]);
+  if (acc.has(c)) return "Accessory";
+
+  return "Equip";
+}
+
+function hintStageFromMisses(misses) {
+  const stages = CONFIG.HINT_STAGES;
+  for (let i = 0; i < stages.length; i++) {
+    if (misses < stages[i]) return i;
+  }
+  return stages.length;
+}
+
 /* ================= Menu + How-to ================= */
 document.getElementById("play-items").addEventListener("click", async () => {
   document.getElementById("menu").style.display = "none";
@@ -218,15 +261,6 @@ document.getElementById("howto-toggle").addEventListener("click", () => {
 });
 
 /* ================= Answer selection ================= */
-function getAnswerFromPool(pool) {
-  const forced = localStorage.getItem("dev_force_index");
-  if (forced !== null) {
-    const idx = Math.max(0, Math.min(pool.length - 1, parseInt(forced, 10) || 0));
-    return pool[idx];
-  }
-  const todayIndex = new Date().getDate() % pool.length;
-  return pool[todayIndex];
-}
 function isRandomMode() {
   return localStorage.getItem("dev_force_index") !== null;
 }
@@ -285,12 +319,12 @@ function rangeGap(gMin, gMax, aMin, aMax) {
   if (gMax < aMin) return aMin - gMax;   // guess below answer
   return gMin - aMax;                     // guess above answer
 }
-// Color logic: green = overlap; yellow = gap ≤ 5; red = far/no data
+// Color logic: green = overlap; yellow = gap ≤ CONFIG.LEVEL_CLOSE_GAP; red = far/no data
 function levelColor(gMin, gMax, aMin, aMax) {
   if (bothNull(gMin, gMax, aMin, aMax)) return 'green';
   if (anyNull(gMin, gMax, aMin, aMax))  return 'red';
   if (rangesOverlap(gMin, gMax, aMin, aMax)) return 'green';
-  return rangeGap(gMin, gMax, aMin, aMax) <= 5 ? 'yellow' : 'red';
+  return rangeGap(gMin, gMax, aMin, aMax) <= CONFIG.LEVEL_CLOSE_GAP ? 'yellow' : 'red';
 }
 // Display: "—" for non-equipables; "min–max" or single; add ✓ / ↑ / ↓
 function levelDisplay(gMin, gMax, aMin, aMax) {
@@ -426,7 +460,6 @@ function startGame(pool) {
   window.__CATEGORY__ = dailyCategory;
 
   const categoryEl = document.getElementById("category");
-  if (categoryEl) categoryEl.textContent = `Category: ${dailyCategory}`;
 
   const today = new Date().toDateString();
 
@@ -452,8 +485,30 @@ function startGame(pool) {
   updateCounter();
   guessInput.focus();
 
+  /* ================= Hints and Search Scope ================= */
+  function updateHintsAndSearchScope() {
+    const misses = (guessesData.guesses || []).length;
+    const stage = hintStageFromMisses(misses);
+
+    if (categoryEl) {
+      if (stage === 0) categoryEl.textContent = "Category: ???";
+      else if (stage === 1) categoryEl.textContent = `Category: ${broadGroupFromClassType(dailyCategory)}`;
+      else categoryEl.textContent = `Category: ${dailyCategory}`;
+    }
+
+    if (stage === 0) {
+      window.__SUGGEST_POOL__ = playablePool;
+    } else if (stage === 1) {
+      const group = broadGroupFromClassType(dailyCategory);
+      window.__SUGGEST_POOL__ = playablePool.filter(it => broadGroupFromClassType(it.classType) === group);
+    } else {
+      window.__SUGGEST_POOL__ = categoryPool;
+    }
+  }
+
   // render prior guesses
   (guessesData.guesses || []).forEach(g => addGuessToTable(g));
+  updateHintsAndSearchScope();
 
   function updateCounter() {
     counterEl.textContent = `Guess #${(guessesData.guesses?.length || 0) + 1}`;
@@ -492,14 +547,15 @@ function classesColor(g, a) {
     return 'red';
   }
 
-  // Suggestions (only within today's category pool)
+  // Suggestions (narrowed by hint stage: __SUGGEST_POOL__ or categoryPool)
   guessInput.addEventListener("input", () => {
     const val = guessInput.value.trim().toLowerCase();
     suggestionBox.innerHTML = "";
     if (!val) return;
 
-    const matches = categoryPool.filter(e => e.name.toLowerCase().includes(val));
-    matches.slice(0, 8).forEach(match => {
+    const suggestPool = (window.__SUGGEST_POOL__ != null) ? window.__SUGGEST_POOL__ : categoryPool;
+    const matches = suggestPool.filter(e => e.name.toLowerCase().includes(val));
+    matches.slice(0, CONFIG.MAX_SUGGESTIONS).forEach(match => {
       const li = document.createElement("li");
       li.textContent = match.name;
       li.onclick = () => {
@@ -521,9 +577,9 @@ function classesColor(g, a) {
       return;
     }
 
-    const item = categoryPool.find(i => i.name.toLowerCase() === userGuess);
+    const item = playablePool.find(i => i.name.toLowerCase() === userGuess);
     if (!item) {
-      alert("Not found in today's category.");
+      alert("Unknown item.");
       guessInput.focus();
       return;
     }
@@ -536,6 +592,7 @@ function classesColor(g, a) {
       result.textContent = `🎉 Correct! You got it in ${guessesData.guesses.length} guesses.`;
       result.style.color = "#6dff6d";
     } else {
+      updateHintsAndSearchScope();
       result.textContent = "Not quite, try again.";
       result.style.color = "#ff7a7a";
     }
