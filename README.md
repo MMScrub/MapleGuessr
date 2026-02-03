@@ -1,4 +1,4 @@
-# 🎯 MapleGuessr (Early Early Early (unplayeable) Access v0.2.4)
+# 🎯 MapleGuessr (Very Early Early Access v0.2.5)
 
 A daily guessing game for MapleLegends items, inspired by Wordle-style mechanics.  
 Guess the hidden item by entering names — the table will give you feedback on your guess based on stats and source.
@@ -8,7 +8,7 @@ Guess the hidden item by entering names — the table will give you feedback on 
 2. ⌨️ Enter your guess in the input field. A suggestion list will help with spelling.
 3. 📊 After submitting, the table will compare your guess to the correct answer:
    - 🟩 **Green** = Exact match
-   - 🟨 **Yellow** = Close match (Equip Level ±5 from the answer’s range, or same source type but different specific source)
+   - 🟨 **Yellow** = Close match (Equip Level ±10 from the answer’s range, or same source type but different specific source)
    - 🟥 **Red** = No match
 4. ⬆️⬇️ **Equip Level (Range)**
    - Items now use **min–max** level ranges (e.g., `50–90` for Ravana Helmet).
@@ -35,7 +35,7 @@ Guess the hidden item by entering names — the table will give you feedback on 
 
 ## 📅 Changelog 🧩 Update v0.2.5 – Core Systems Cleanup & Data Workflow
 
-- Refactored game into separate files (HTML / CSS / JS) for better organization and maintainability
+- restructured game into separate files (HTML / CSS / JS) for better organization and maintainability
 - Added scrolling + improved usability to the dropdown suggestion search
 - Implemented filtered, gradual hint logic to support future step-by-step narrowing gameplay
 - Reworked item data structure (removed stackable, added class support, clarified categories)
