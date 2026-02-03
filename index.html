@@ -104,7 +104,6 @@ th { background:#333; }
       <tr>
         <th>Item</th>
         <th>Equip Level</th>
-        <th>Stackable</th>
         <th>Class Type</th>
         <th>Tradable</th>
         <th>Dropped By / Source</th>
@@ -448,7 +447,6 @@ function startGame(pool) {
     row.innerHTML = `
       <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
       <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
-      <td class="${item.stackable === answer.stackable ? 'green' : 'red'}">${item.stackable ? 'Yes' : 'No'}</td>
       <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
       <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
       <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
