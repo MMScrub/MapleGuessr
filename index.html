@@ -90,6 +90,7 @@ th { background:#333; }
   <h2 id="game-title">Items</h2>
 
   <div id="mode" class="mode-indicator"></div>
+  <div id="category" class="mode-indicator"></div>
   <div id="guess-counter" class="counter"></div>
 
   <input type="text" id="guess-input" placeholder="Enter your guess..." autocomplete="off"/>
@@ -172,7 +173,7 @@ document.getElementById("next-btn").addEventListener("click", () => {
   location.reload();
 });
 document.getElementById("reveal-btn").addEventListener("click", () => {
-  const ans = getAnswerFromPool(window.__POOL__ || []);
+  const ans = window.__ANSWER__;
   document.getElementById("reveal").textContent = `Answer (Dev): ${ans?.name || '—'}`;
 });
 
@@ -183,7 +184,6 @@ document.getElementById("play-items").addEventListener("click", async () => {
 
   const pool = await loadPoolData();
   window.__POOL__ = pool;             // keep globally for dev tools
-  window.__SUGGEST_INDEX__ = pool;    // same list for autocomplete now
 
   startGame(pool);
 });
@@ -219,14 +219,19 @@ function isRandomMode() {
 function getDropType(src) {
   const s = (src || "").toLowerCase().trim();
   if (!s) return "mob";
-  if (s.includes("gach"))                     return "gachapon";
-  if (s.includes("pq"))                       return "pq";
-  if (s.includes("quest"))                    return "quest";
-  // Treat NPC shop purchases as Store (exclude cash/nx)
-  if (s.includes("store") || (s.includes("shop") && !s.includes("cash") && !s.includes("nx")))
-                                              return "store";
+
+  if (s.includes("gach")) return "gachapon";
+  if (s.includes("pq")) return "pq";
+  if (s.includes("quest")) return "quest";
+
+  // NPC shop purchases as Store (exclude cash/nx)
+  if (s.includes("store") || (s.includes("shop") && !s.includes("cash") && !s.includes("nx"))) {
+    return "store";
+  }
+
   return "mob"; // default mob/boss
 }
+
 function formatSourceWithBadge(src) {
   const t = getDropType(src);
   const map = {
@@ -237,7 +242,7 @@ function formatSourceWithBadge(src) {
     mob:      { cls: "mob",   label: "[Mob]" }
   };
   const entry = map[t] || map.mob;
-  return `<span class="badge ${entry.cls}">${entry.label}</span>${src || ''}`;
+  return `<span class="badge ${entry.cls}">${entry.label}</span>${src || ""}`;
 }
   
 function highlightName(guessName, answerName) {
@@ -282,19 +287,131 @@ function levelDisplay(gMin, gMax, aMin, aMax) {
 }
 
 /* ================= Game Logic ================= */
+/* ================= Pool filtering + Daily selection ================= */
+
+// Allow-list of equip categories (no chairs, no scrolls, no consumables, no stars, no nx)
+const EQUIP_CATEGORIES = new Set([
+  // Armor / accessories
+  "Hat", "Helmet", "Top", "Bottom", "Overall",
+  "Cape", "Gloves", "Shoes",
+  "Shield",
+  "Earrings", "Eye Accessory", "Face Accessory",
+  "Pendant", "Ring",
+
+  // Weapons
+  "Bow", "Claw", "Dagger", "Gun", "Knuckle", "Mace",
+  "One-Handed Sword", "Two-Handed Sword",
+  "Polearm", "Spear",
+  "Staff", "Wand"
+]);
+
+function isNxLike(item) {
+  const name = (item.name || "").toLowerCase();
+  const src  = (item.droppedBy || "").toLowerCase();
+  return (
+    name.includes("nx") || name.includes("cash") ||
+    src.includes("nx") || src.includes("cash") || src.includes("cash shop")
+  );
+}
+
+function getPlayablePool(pool) {
+  return (pool || []).filter(it => {
+    const cat = it.classType;
+
+    // only allowed equip categories
+    if (!EQUIP_CATEGORIES.has(cat)) return false;
+
+    // explicitly block throwing stars if they ever appear
+    if ((cat || "").toLowerCase() === "throwing star") return false;
+
+    // block NX/cash shop items
+    if (isNxLike(it)) return false;
+
+    return true;
+  });
+}
+
+function getLocalDateKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`; // stable per local day
+}
+
+function hashStrToInt(str) {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) h = ((h << 5) + h) + str.charCodeAt(i);
+  return (h >>> 0);
+}
+
+function getDailyCategory(playablePool) {
+  const counts = new Map();
+  playablePool.forEach(it => counts.set(it.classType, (counts.get(it.classType) || 0) + 1));
+
+  // avoid tiny categories
+  const categories = [...counts.entries()]
+    .filter(([_, n]) => n >= 4)
+    .map(([c]) => c)
+    .sort();
+
+  const key = getLocalDateKey();
+  const idx = hashStrToInt("cat|" + key) % categories.length;
+  return categories[idx];
+}
+
+function getDailyAnswerFromCategory(categoryPool) {
+  const key = getLocalDateKey();
+  const idx = hashStrToInt("ans|" + key + "|" + categoryPool.length) % categoryPool.length;
+  return categoryPool[idx];
+}
+  
 function startGame(pool) {
+  function startGame(pool) {
   const modeEl = document.getElementById("mode");
   modeEl.innerHTML = isRandomMode()
     ? `Mode: <span class="random">Random (Dev)</span>`
     : `Mode: <span class="daily">Daily</span>`;
 
-  const answer = getAnswerFromPool(pool);
+  const playablePool = getPlayablePool(pool);
+
+  let dailyCategory;
+  let categoryPool;
+  let answer;
+
+  if (isRandomMode()) {
+    // Dev forced index picks a specific item from the playable pool
+    const forced = parseInt(localStorage.getItem("dev_force_index") ?? "0", 10);
+    const idx = Math.max(0, Math.min(playablePool.length - 1, isNaN(forced) ? 0 : forced));
+    answer = playablePool[idx];
+
+    // category becomes whatever the forced answer is
+    dailyCategory = answer.classType;
+    categoryPool = playablePool.filter(i => i.classType === dailyCategory);
+  } else {
+    // Daily: pick category, then pick answer inside that category
+    dailyCategory = getDailyCategory(playablePool);
+    categoryPool = playablePool.filter(i => i.classType === dailyCategory);
+    answer = getDailyAnswerFromCategory(categoryPool);
+  }
+
+  // expose for dev tools
+  window.__ANSWER__ = answer;
+  window.__CATEGORY__ = dailyCategory;
+
+  const categoryEl = document.getElementById("category");
+  if (categoryEl) categoryEl.textContent = `Category: ${dailyCategory}`;
+
   const today = new Date().toDateString();
 
-  // per-day guesses (kept even with random mode toggle)
-  let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || { date: today, guesses: [] };
-  if (guessesData.date !== today && !isRandomMode()) {
-    guessesData = { date: today, guesses: [] };
+  let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || {
+    date: today,
+    category: dailyCategory,
+    guesses: []
+  };
+
+  if ((!isRandomMode()) && (guessesData.date !== today || guessesData.category !== dailyCategory)) {
+    guessesData = { date: today, category: dailyCategory, guesses: [] };
     localStorage.setItem("guesses_items", JSON.stringify(guessesData));
   }
 
@@ -344,7 +461,7 @@ function startGame(pool) {
     suggestionBox.innerHTML = "";
     if (!val) return;
 
-    const src = window.__SUGGEST_INDEX__ || pool;
+    const src = window.__SUGGEST_INDEX__ || categoryPool;
     const matches = src.filter(e => e.name.toLowerCase().includes(val));
     matches.slice(0, 8).forEach(match => {
       const li = document.createElement("li");
@@ -367,7 +484,7 @@ function startGame(pool) {
       guessInput.focus();
       return;
     }
-    const item = pool.find(i => i.name.toLowerCase() === userGuess);
+    const item = categoryPool.find(i => i.name.toLowerCase() === userGuess);
     if (!item) {
       alert("Item not found in pool.");
       guessInput.focus();
