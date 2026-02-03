@@ -176,13 +176,8 @@ document.getElementById("reveal-btn").addEventListener("click", () => {
   const ans = window.__ANSWER__;
   document.getElementById("reveal").textContent = `Answer (Dev): ${ans?.name || '—'}`;
 });
-
-/* ================= Menu + How-to ================= */
-document.getElementById("play-items").addEventListener("click", async () => {
-  document.getElementById("menu").style.display = "none";
-  document.getElementById("game").style.display = "block";
-
-/* ================= WIP  ================= */  
+  
+  /* ================= WIP  ================= */  
 function normalizeClasses(it) {
   const arr = Array.isArray(it?.classes) ? it.classes : [];
   return [...new Set(arr.map(s => String(s).trim()).filter(Boolean))]
@@ -198,6 +193,14 @@ function sameClasses(a, b) {
   for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
   return true;
 }
+
+/* ================= Menu + How-to ================= */
+document.getElementById("play-items").addEventListener("click", async () => {
+  document.getElementById("menu").style.display = "none";
+  document.getElementById("game").style.display = "block";
+
+  const pool = await loadPoolData();
+  window.__POOL__ = pool;
 
   startGame(pool);
 });
@@ -466,7 +469,6 @@ function startGame(pool) {
   row.innerHTML = `
     <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
     <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
-    <td class="${sameClasses(gClasses, aClasses) ? 'green' : 'red'}">${classesToText(gClasses)}</td>
     <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
     <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
     <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
