@@ -45,7 +45,7 @@ Guess the hidden item by entering names, each guess gives structured feedback to
 Includes color-coded source badges:
 - [PQ] = Party Quest 🎉  
 - [Gachapon] = Gachapon 🎰  
-- [Quest] = Quest / Crafting 📜  
+- [Quest] = Quest / Exchange 📜  
 - [Mob] = Monster / Boss drop 🐉  
 - [Store] = NPC Store 🏪  
 
