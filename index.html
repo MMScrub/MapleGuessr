@@ -469,10 +469,10 @@ function startGame(pool) {
   row.innerHTML = `
     <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
     <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
+    <td class="${classesColor(gClasses, aClasses)}">${classesToText(gClasses)}</td>
     <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
     <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
     <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
-    <td class="${classesColor(gClasses, aClasses)}">${classesToText(gClasses)}</td>
   `;
   tableBody.appendChild(row);
 }
