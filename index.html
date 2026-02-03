@@ -44,7 +44,7 @@ th { background:#333; }
 .answer-row td + td { border-left:none !important; }
 .answer-row td:last-child { border-right:2px solid #6dff6d !important; }
 
-#suggestions { list-style:none; background:#2a2a2a; padding:0; margin:0 auto; width:260px; border-radius:4px; text-align:left; }
+#suggestions { list-style:none; background:#2a2a2a; padding:0; margin:0 auto; width:260px; max-height:220px; overflow-y:auto; border-radius:4px; text-align:left; }
 #suggestions li { padding:6px; cursor:pointer; }
 #suggestions li:hover { background:#444; }
 
@@ -105,7 +105,7 @@ th { background:#333; }
         <th>Item</th>
         <th>Equip Level</th>
         <th>Classes</th>
-        <th>Class Type</th>
+        <th>Category</th>
         <th>Tradable</th>
         <th>Dropped By / Source</th>
       </tr>
@@ -223,7 +223,7 @@ function broadGroupFromClassType(classType) {
   const armor = new Set(["hat","top","bottom","overall","cape","gloves","shoes","shield","helmet"]);
   if (armor.has(c)) return "Armor";
 
-  const acc = new Set(["earrings","eye accessory","face accessory","pendant","ring"]);
+  const acc = new Set(["earrings","eye accessory","face accessory","pendant"]);
   if (acc.has(c)) return "Accessory";
 
   return "Equip";
@@ -343,7 +343,7 @@ function levelDisplay(gMin, gMax, aMin, aMax) {
 // Allow-list of equip categories (no chairs, no scrolls, no consumables, no stars, no nx)
 const EQUIP_CATEGORIES = new Set([
   // Armor / accessories
-  "Hat", "Top", "Bottom", "Overall",
+  "Hat", "Helmet", "Top", "Bottom", "Overall",
   "Cape", "Gloves", "Shoes",
   "Shield",
   "Earrings", "Eye Accessory", "Face Accessory",
@@ -491,9 +491,9 @@ function startGame(pool) {
     const stage = hintStageFromMisses(misses);
 
     if (categoryEl) {
-      if (stage === 0) categoryEl.textContent = "Category: ???";
-      else if (stage === 1) categoryEl.textContent = `Category: ${broadGroupFromClassType(dailyCategory)}`;
-      else categoryEl.textContent = `Category: ${dailyCategory}`;
+      if (stage === 0) categoryEl.textContent = "Hint: ???";
+      else if (stage === 1) categoryEl.textContent = `Hint: ${broadGroupFromClassType(dailyCategory)}`;
+      else categoryEl.textContent = `Hint: ${dailyCategory}`;
     }
 
     if (stage === 0) {
