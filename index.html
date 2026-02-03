@@ -292,15 +292,16 @@ function levelDisplay(gMin, gMax, aMin, aMax) {
 // Allow-list of equip categories (no chairs, no scrolls, no consumables, no stars, no nx)
 const EQUIP_CATEGORIES = new Set([
   // Armor / accessories
-  "Hat", "Helmet", "Top", "Bottom", "Overall",
+  "Hat", "Top", "Bottom", "Overall",
   "Cape", "Gloves", "Shoes",
   "Shield",
   "Earrings", "Eye Accessory", "Face Accessory",
-  "Pendant", "Ring",
+  "Pendant",
 
   // Weapons
-  "Bow", "Claw", "Dagger", "Gun", "Knuckle", "Mace",
-  "One-Handed Sword", "Two-Handed Sword",
+  "Bow", "Claw", "Dagger", "Gun", "Knuckle", "Mace", "CrossBow"
+  "One-Handed Sword", "One-Handed Axe", "One-Handed Mace",
+  "Two-Handed Sword", "Two-Handed Axe", "Two-Handed Mace",
   "Polearm", "Spear",
   "Staff", "Wand"
 ]);
@@ -367,13 +368,19 @@ function getDailyAnswerFromCategory(categoryPool) {
 }
   
 function startGame(pool) {
-  function startGame(pool) {
   const modeEl = document.getElementById("mode");
   modeEl.innerHTML = isRandomMode()
     ? `Mode: <span class="random">Random (Dev)</span>`
     : `Mode: <span class="daily">Daily</span>`;
 
   const playablePool = getPlayablePool(pool);
+
+  // Safety: if your allow-list filtered everything out, show a helpful message
+  if (!playablePool.length) {
+    document.getElementById("result").textContent =
+      "No playable items found. Check classType names vs EQUIP_CATEGORIES.";
+    return;
+  }
 
   let dailyCategory;
   let categoryPool;
@@ -385,13 +392,15 @@ function startGame(pool) {
     const idx = Math.max(0, Math.min(playablePool.length - 1, isNaN(forced) ? 0 : forced));
     answer = playablePool[idx];
 
-    // category becomes whatever the forced answer is
     dailyCategory = answer.classType;
     categoryPool = playablePool.filter(i => i.classType === dailyCategory);
   } else {
-    // Daily: pick category, then pick answer inside that category
     dailyCategory = getDailyCategory(playablePool);
     categoryPool = playablePool.filter(i => i.classType === dailyCategory);
+
+    // Safety: if the chosen category ended up empty for any reason, fallback
+    if (!categoryPool.length) categoryPool = playablePool;
+
     answer = getDailyAnswerFromCategory(categoryPool);
   }
 
@@ -451,18 +460,17 @@ function startGame(pool) {
     if ((guessDrop || "") === (answerDrop || "")) return 'green';
     const gType = getDropType(guessDrop);
     const aType = getDropType(answerDrop);
-    if (gType === aType) return 'yellow'; // same type, different specific source
+    if (gType === aType) return 'yellow';
     return 'red';
   }
 
-  // Suggestions (use the same pool for now)
+  // Suggestions (only within today's category pool)
   guessInput.addEventListener("input", () => {
     const val = guessInput.value.trim().toLowerCase();
     suggestionBox.innerHTML = "";
     if (!val) return;
 
-    const src = window.__SUGGEST_INDEX__ || categoryPool;
-    const matches = src.filter(e => e.name.toLowerCase().includes(val));
+    const matches = categoryPool.filter(e => e.name.toLowerCase().includes(val));
     matches.slice(0, 8).forEach(match => {
       const li = document.createElement("li");
       li.textContent = match.name;
@@ -484,9 +492,10 @@ function startGame(pool) {
       guessInput.focus();
       return;
     }
+
     const item = categoryPool.find(i => i.name.toLowerCase() === userGuess);
     if (!item) {
-      alert("Item not found in pool.");
+      alert("Not found in today's category.");
       guessInput.focus();
       return;
     }
