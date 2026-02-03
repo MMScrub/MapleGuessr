@@ -104,6 +104,7 @@ th { background:#333; }
       <tr>
         <th>Item</th>
         <th>Equip Level</th>
+        <th>Classes</th>
         <th>Class Type</th>
         <th>Tradable</th>
         <th>Dropped By / Source</th>
@@ -181,8 +182,22 @@ document.getElementById("play-items").addEventListener("click", async () => {
   document.getElementById("menu").style.display = "none";
   document.getElementById("game").style.display = "block";
 
-  const pool = await loadPoolData();
-  window.__POOL__ = pool;             // keep globally for dev tools
+/* ================= WIP  ================= */  
+function normalizeClasses(it) {
+  const arr = Array.isArray(it?.classes) ? it.classes : [];
+  return [...new Set(arr.map(s => String(s).trim()).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b));
+}
+
+function classesToText(arr) {
+  return arr.length ? arr.join(", ") : "—";
+}
+
+function sameClasses(a, b) {
+  if (a.length !== b.length) return false;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
 
   startGame(pool);
 });
@@ -442,18 +457,31 @@ function startGame(pool) {
   }
 
   function addGuessToTable(item) {
-    const row = document.createElement("tr");
-    if (item.name === answer.name) row.classList.add("answer-row");
-    row.innerHTML = `
-      <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
-      <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
-      <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
-      <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
-      <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
-    `;
-    tableBody.appendChild(row);
-  }
+  const row = document.createElement("tr");
+  if (item.name === answer.name) row.classList.add("answer-row");
 
+  const gClasses = normalizeClasses(item);
+  const aClasses = normalizeClasses(answer);
+
+  row.innerHTML = `
+    <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
+    <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
+    <td class="${sameClasses(gClasses, aClasses) ? 'green' : 'red'}">${classesToText(gClasses)}</td>
+    <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
+    <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
+    <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
+    <td class="${classesColor(gClasses, aClasses)}">${classesToText(gClasses)}</td>
+  `;
+  tableBody.appendChild(row);
+}
+  
+function classesColor(g, a) {
+  if (sameClasses(g, a)) return "green";
+  const aSet = new Set(a);
+  const overlap = g.some(x => aSet.has(x));
+  return overlap ? "yellow" : "red";
+}
+  
   function dropColor(guessDrop, answerDrop) {
     if ((guessDrop || "") === (answerDrop || "")) return 'green';
     const gType = getDropType(guessDrop);
