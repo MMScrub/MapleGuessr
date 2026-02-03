@@ -10,6 +10,7 @@ h1 { cursor:pointer; color:#6d88ff; margin-bottom:8px; }
 .mode-row { display:flex; align-items:center; justify-content:center; gap:12px; }
 .ghost-btn { background:transparent; border:1px solid #555; color:#f0f0f0; padding:6px 10px; border-radius:6px; cursor:pointer; }
 .ghost-btn:hover { background:#2a2a2a; }
+.ghost-btn:disabled { opacity:0.5; cursor:not-allowed; }
 .hidden { display:none !important; }
 
 .mode-indicator { margin:8px 0 6px; font-size:14px; opacity:.9; }
@@ -17,6 +18,7 @@ h1 { cursor:pointer; color:#6d88ff; margin-bottom:8px; }
 .mode-indicator .random { color:#f0c36a; }
 .mode-indicator .endless { color:#f0c36a; }
 .counter { margin:4px 0 10px; font-size:14px; opacity:.9; }
+.result-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:6px; flex-wrap:wrap; }
 
 .menu { display:none; flex-direction:column; align-items:center; gap:15px; margin-top:26px; }
 .menu button { padding:14px 20px; font-size:18px; border:none; border-radius:8px; cursor:pointer; width:200px; background:#444; color:white; }
@@ -32,7 +34,7 @@ th, td { padding:8px; border:1px solid #555; }
 th { background:#333; }
 .green { background:#2e7d32; }
 .yellow { background:#f9a825; }
-.red { background:#c62828; }
+.red { background:#444; }
 
 /* Correct row: single clean green box */
 .answer-row { font-weight:bold; }

@@ -123,13 +123,7 @@ function normalizeClasses(it) {
 // Abbreviate class names for in-game display
 const CLASS_ABBREV = {
   Warrior: "War", Magician: "Mag", Thief: "Thf", Bowman: "Bow", Pirate: "Pir",
-  Beginner: "Beg", "Dawn Warrior": "DW", "Blaze Wizard": "BW", "Wind Archer": "WA",
-  "Night Walker": "NW", "Thunder Breaker": "TB", "Aran": "Aran", "Evan": "Evan",
-  "Battle Mage": "BM", "Wild Hunter": "WH", "Mechanic": "Mech", "Demon Slayer": "DS",
-  "Demon Avenger": "DA", "Phantom": "Phan", "Luminous": "Lumi", "Kaiser": "Kais",
-  "Kanna": "Kanna", "Hayato": "Hayato", "Mihile": "Mih", "Angelic Buster": "AB",
-  "Xenon": "Xen", "Zero": "Zero", "Kinesis": "Kin", "Cadena": "Cad", "Illium": "Ill",
-  "Ark": "Ark", "Adele": "Ade", "Pathfinder": "PF", "Hoyoung": "HY", "Lara": "Lara"
+  Beginner: "Beg"
 };
 
 function abbreviateClass(name) {
@@ -419,6 +413,7 @@ function startGame(pool) {
   const submitBtn = document.getElementById("submit-btn");
   const tableBody = document.querySelector("#guess-table tbody");
   const result = document.getElementById("result");
+  const copyBtn = document.getElementById("copy-btn");
   const suggestionBox = document.getElementById("suggestions");
   const counterEl = document.getElementById("guess-counter");
 
@@ -433,7 +428,7 @@ function startGame(pool) {
   /* ================= Hints and Search Scope ================= */
   // Stages: 0 = ??? | 1 = Weapon/Armor/Acc (guess 3) | 2 = exact category (guess 5) | 3 = + classes (guess 7) | 4 = + source (guess 9)
   function updateHintsAndSearchScope() {
-    const misses = (guessesData.guesses || []).length;
+    const misses = getCurrentGuesses().length;
     const stage = hintStageFromMisses(misses);
     const group = broadGroupFromClassType(dailyCategory);
 
@@ -469,19 +464,81 @@ function startGame(pool) {
   }
 
   function updateCounter() {
-    counterEl.textContent = `Guess #${(guessesData.guesses?.length || 0) + 1}`;
+    counterEl.textContent = `Guess #${getCurrentGuesses().length + 1}`;
   }
 
   function getCurrentGuesses() {
-    if (persistGuesses && guessesKey) {
+    if (!persistGuesses) {
+      return guessesData.guesses || [];
+    }
+    if (guessesKey) {
       try {
         const saved = JSON.parse(localStorage.getItem(guessesKey) || "null");
-        if (saved && Array.isArray(saved.guesses)) return saved.guesses;
+        if (saved && Array.isArray(saved.guesses)) {
+          guessesData.guesses = saved.guesses;
+          return saved.guesses;
+        }
       } catch (e) {
         // ignore parse errors and fall back to in-memory
       }
     }
     return guessesData.guesses || [];
+  }
+
+  function updateCopyState() {
+    if (copyBtn) {
+      copyBtn.disabled = getCurrentGuesses().length === 0;
+    }
+  }
+
+  function getShareText() {
+    const guesses = getCurrentGuesses();
+    if (!guesses.length) return null;
+
+    const solveIndex = guesses.findIndex(g => g.name.toLowerCase() === answer.name.toLowerCase());
+    const solved = solveIndex !== -1;
+    const displayGuesses = solved ? guesses.slice(0, solveIndex + 1) : guesses;
+
+    const emojiFor = (color) => {
+      if (color === "green") return "🟩";
+      if (color === "yellow") return "🟨";
+      return "⬛";
+    };
+
+    const rowForGuess = (g) => {
+      const levelC = levelColor(g.minLevel, g.maxLevel, answer.minLevel, answer.maxLevel);
+      const classC = classesColor(normalizeClasses(g), normalizeClasses(answer));
+      const typeC = (g.classType === answer.classType) ? "green" : "red";
+      const tradC = (g.tradable === answer.tradable) ? "green" : "red";
+      const dropC = dropColor(g.droppedBy, answer.droppedBy);
+
+      // Exclude item name (5 columns total)
+      return [
+        emojiFor(levelC),
+        emojiFor(classC),
+        emojiFor(typeC),
+        emojiFor(tradC),
+        emojiFor(dropC)
+      ].join("");
+    };
+
+    const visibleRows = displayGuesses.slice(0, 6).map(rowForGuess);
+    const remaining = displayGuesses.length - visibleRows.length;
+    const grid = [
+      ...visibleRows,
+      ...(remaining > 0 ? [`(+${remaining} more guesses)`] : [])
+    ].join("\n");
+    const modeLabel = isEndlessMode() ? "Endless" : "Daily";
+    const hintsLabel = isHintsEnabled() ? "Hints" : "No Hints";
+    const d = new Date();
+    const weekdays = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    const dateLabel = `${weekdays[d.getDay()]} ${months[d.getMonth()]} ${String(d.getDate()).padStart(2, "0")} ${d.getFullYear()}`;
+    const scoreLine = solved
+      ? `Solved in ${displayGuesses.length} guesses`
+      : `Unsolved (${displayGuesses.length} guesses)`;
+
+    return `MapleGuessr ${modeLabel} ${hintsLabel} — ${dateLabel}\n${scoreLine}\n\n${grid}`;
   }
 
   function addGuessToTable(item) {
@@ -521,16 +578,44 @@ function classesColor(g, a) {
   getCurrentGuesses().forEach(g => addGuessToTable(g));
   updateHintsAndSearchScope();
   updateCounter();
+  updateCopyState();
 
   window.__REFRESH_UI__ = () => {
     tableBody.innerHTML = "";
     getCurrentGuesses().forEach(g => addGuessToTable(g));
     updateHintsAndSearchScope();
     updateCounter();
+    updateCopyState();
   };
 
+  if (copyBtn) {
+    copyBtn.onclick = async () => {
+      const text = getShareText();
+      if (!text) {
+        alert("No results yet.");
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(text);
+        const prev = copyBtn.textContent;
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => { copyBtn.textContent = prev; }, 1200);
+      } catch (e) {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        const prev = copyBtn.textContent;
+        copyBtn.textContent = "Copied!";
+        setTimeout(() => { copyBtn.textContent = prev; }, 1200);
+      }
+    };
+  }
+
   // Suggestions (narrowed by hint stage: __SUGGEST_POOL__ or categoryPool)
-  guessInput.addEventListener("input", () => {
+  guessInput.oninput = () => {
     const val = guessInput.value.trim().toLowerCase();
     suggestionBox.innerHTML = "";
     if (!val) return;
@@ -546,10 +631,10 @@ function classesColor(g, a) {
       };
       suggestionBox.appendChild(li);
     });
-  });
+  };
 
   // Submit guess
-  submitBtn.addEventListener("click", () => {
+  submitBtn.onclick = () => {
     const userGuess = guessInput.value.trim().toLowerCase();
     if (!userGuess) return;
 
@@ -584,10 +669,11 @@ function classesColor(g, a) {
     }
 
     updateCounter();
+    updateCopyState();
     guessInput.value = "";
     suggestionBox.innerHTML = "";
     guessInput.focus();
-  });
+  };
 }
 
 /* ================= App Boot ================= */

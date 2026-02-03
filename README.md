@@ -9,7 +9,7 @@ Guess the hidden item by entering names — the table will give you feedback on 
 3. 📊 The table compares your guess to the answer:
    - 🟩 **Green** = Exact match
    - 🟨 **Yellow** = Close match (Equip Level gap ≤ ±5, or same source type but different specific source)
-   - 🟥 **Red** = No match
+   - ⬛ **Grey** = No match
 4. ⬆️⬇️ **Equip Level (Range)**
    - Items use **min–max** level ranges (e.g., `50–90`).
    - `✓` means your range **overlaps** the answer’s range.

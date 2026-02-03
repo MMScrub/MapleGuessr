@@ -52,7 +52,10 @@
     <tbody></tbody>
   </table>
 
-  <p id="result"></p>
+  <div class="result-row">
+    <p id="result"></p>
+    <button id="copy-btn" class="ghost-btn">Copy Results</button>
+  </div>
 
   <!-- How to Play -->
   <div class="howto">
@@ -62,8 +65,8 @@
       <p><strong>Colors:</strong></p>
       <ul>
         <li>Green = Exact/overlap match</li>
-        <li>Yellow = Close (Equip Level range within ±10, or same source type but different specific source)</li>
-        <li>Red = No match</li>
+        <li>Yellow = Close (Equip Level range within ±5, or same source type but different specific source)</li>
+        <li>Gray = No match</li>
       </ul>
       <p><strong>Equip Level (Range):</strong>
          ✓ when your range overlaps the answer’s range; ↑ means the answer’s range is higher; ↓ means lower.</p>
