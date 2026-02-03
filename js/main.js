@@ -1,9 +1,18 @@
 /* ================= Config ================= */
 const CONFIG = {
-  LEVEL_CLOSE_GAP: 20,
+  LEVEL_CLOSE_GAP: 5,
   MAX_SUGGESTIONS: 8,
   HINT_STAGES: [3, 5, 7, 9]  // misses before next hint (stage 1 at 3, stage 2 at 5, etc.)
 };
+
+const MODE_KEY = "mode";
+const MODE_DAILY = "daily";
+const MODE_ENDLESS = "endless";
+const SETTINGS = {
+  ABBREV: "setting_abbrev",
+  HINTS: "setting_hints"
+};
+const GUESSES_KEY_DAILY = "guesses_items_daily";
 
 /* ================= Load data from data/pool.json ================= */
 async function loadPoolData() {
@@ -18,34 +27,91 @@ async function loadPoolData() {
   }
 }
 
-/* ================= Dev Buttons ================= */
-document.getElementById("reset-btn").addEventListener("click", () => {
-  localStorage.clear();
-  location.reload();
-});
-document.getElementById("random-btn").addEventListener("click", () => {
-  const idx = Math.floor(Math.random() * (window.__POOL__?.length || 1));
-  localStorage.setItem("dev_force_index", String(idx));
-  localStorage.setItem("guesses_items", JSON.stringify({ date: new Date().toDateString(), guesses: [] }));
-  location.reload();
-});
-document.getElementById("daily-btn").addEventListener("click", () => {
-  localStorage.removeItem("dev_force_index");
-  localStorage.setItem("guesses_items", JSON.stringify({ date: new Date().toDateString(), guesses: [] }));
-  location.reload();
-});
-document.getElementById("next-btn").addEventListener("click", () => {
-  const len = window.__POOL__?.length || 1;
-  const current = parseInt(localStorage.getItem("dev_force_index") ?? "-1", 10);
-  const next = isNaN(current) ? 0 : (current + 1) % len;
-  localStorage.setItem("dev_force_index", String(next));
-  localStorage.setItem("guesses_items", JSON.stringify({ date: new Date().toDateString(), guesses: [] }));
-  location.reload();
-});
-document.getElementById("reveal-btn").addEventListener("click", () => {
-  const ans = window.__ANSWER__;
-  document.getElementById("reveal").textContent = `Answer (Dev): ${ans?.name || '—'}`;
-});
+/* ================= Settings + Mode ================= */
+function getMode() {
+  return localStorage.getItem(MODE_KEY) || MODE_DAILY;
+}
+
+function setMode(mode) {
+  localStorage.setItem(MODE_KEY, mode);
+}
+
+function isEndlessMode() {
+  return getMode() === MODE_ENDLESS;
+}
+
+function getBoolSetting(key, defaultValue = true) {
+  const raw = localStorage.getItem(key);
+  if (raw == null) return defaultValue;
+  return raw !== "false";
+}
+
+function setBoolSetting(key, value) {
+  localStorage.setItem(key, value ? "true" : "false");
+}
+
+function isAbbrevEnabled() {
+  return getBoolSetting(SETTINGS.ABBREV, true);
+}
+
+function isHintsEnabled() {
+  return getBoolSetting(SETTINGS.HINTS, true);
+}
+
+function updateEndlessButton() {
+  const btn = document.getElementById("endless-btn");
+  const resetBtn = document.getElementById("endless-reset-btn");
+  if (!btn) return;
+  btn.textContent = isEndlessMode() ? "Daily Mode" : "Endless Mode";
+  if (resetBtn) {
+    if (isEndlessMode()) resetBtn.classList.remove("hidden");
+    else resetBtn.classList.add("hidden");
+  }
+}
+
+function initSettingsUI() {
+  const modal = document.getElementById("settings-modal");
+  const openBtn = document.getElementById("settings-btn");
+  const closeBtn = document.getElementById("settings-close");
+  const abbrevToggle = document.getElementById("setting-abbrev");
+  const hintsToggle = document.getElementById("setting-hints");
+
+  if (abbrevToggle) {
+    abbrevToggle.checked = isAbbrevEnabled();
+    abbrevToggle.addEventListener("change", () => {
+      setBoolSetting(SETTINGS.ABBREV, abbrevToggle.checked);
+      if (window.__REFRESH_UI__) window.__REFRESH_UI__();
+    });
+  }
+  if (hintsToggle) {
+    hintsToggle.checked = isHintsEnabled();
+    hintsToggle.addEventListener("change", () => {
+      setBoolSetting(SETTINGS.HINTS, hintsToggle.checked);
+      if (window.__REFRESH_UI__) window.__REFRESH_UI__();
+    });
+  }
+
+  if (openBtn && modal) {
+    openBtn.addEventListener("click", () => {
+      modal.classList.remove("hidden");
+      modal.setAttribute("aria-hidden", "false");
+    });
+  }
+  if (closeBtn && modal) {
+    closeBtn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      modal.setAttribute("aria-hidden", "true");
+    });
+  }
+  if (modal) {
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.add("hidden");
+        modal.setAttribute("aria-hidden", "true");
+      }
+    });
+  }
+}
   
   /* ================= WIP  ================= */  
 function normalizeClasses(it) {
@@ -54,8 +120,27 @@ function normalizeClasses(it) {
     .sort((a, b) => a.localeCompare(b));
 }
 
-function classesToText(arr) {
-  return arr.length ? arr.join(", ") : "—";
+// Abbreviate class names for in-game display
+const CLASS_ABBREV = {
+  Warrior: "War", Magician: "Mag", Thief: "Thf", Bowman: "Bow", Pirate: "Pir",
+  Beginner: "Beg", "Dawn Warrior": "DW", "Blaze Wizard": "BW", "Wind Archer": "WA",
+  "Night Walker": "NW", "Thunder Breaker": "TB", "Aran": "Aran", "Evan": "Evan",
+  "Battle Mage": "BM", "Wild Hunter": "WH", "Mechanic": "Mech", "Demon Slayer": "DS",
+  "Demon Avenger": "DA", "Phantom": "Phan", "Luminous": "Lumi", "Kaiser": "Kais",
+  "Kanna": "Kanna", "Hayato": "Hayato", "Mihile": "Mih", "Angelic Buster": "AB",
+  "Xenon": "Xen", "Zero": "Zero", "Kinesis": "Kin", "Cadena": "Cad", "Illium": "Ill",
+  "Ark": "Ark", "Adele": "Ade", "Pathfinder": "PF", "Hoyoung": "HY", "Lara": "Lara"
+};
+
+function abbreviateClass(name) {
+  const n = (name || "").trim();
+  return CLASS_ABBREV[n] || n.slice(0, 3);
+}
+
+function classesToText(arr, abbreviate = false) {
+  if (!arr.length) return "—";
+  const list = abbreviate ? arr.map(abbreviateClass) : arr;
+  return list.join(", ");
 }
 
 function sameClasses(a, b) {
@@ -81,7 +166,7 @@ function broadGroupFromClassType(classType) {
   if (armor.has(c)) return "Armor";
 
   const acc = new Set(["earrings","eye accessory","face accessory","pendant"]);
-  if (acc.has(c)) return "Accessory";
+  if (acc.has(c)) return "Acc";
 
   return "Equip";
 }
@@ -94,20 +179,25 @@ function hintStageFromMisses(misses) {
   return stages.length;
 }
 
+function showMenu() {
+  const menu = document.getElementById("menu");
+  const game = document.getElementById("game");
+  if (menu) menu.style.display = "flex";
+  if (game) game.style.display = "none";
+}
+
+function showGame() {
+  const menu = document.getElementById("menu");
+  const game = document.getElementById("game");
+  if (menu) menu.style.display = "none";
+  if (game) game.style.display = "block";
+}
+
 /* ================= Menu + How-to ================= */
 document.getElementById("play-items").addEventListener("click", async () => {
-  document.getElementById("menu").style.display = "none";
-  document.getElementById("game").style.display = "block";
-
-  const pool = await loadPoolData();
-  window.__POOL__ = pool;
-
-  startGame(pool);
-});
-
-document.getElementById("title").addEventListener("click", () => {
-  document.getElementById("menu").style.display = "flex";
-  document.getElementById("game").style.display = "none";
+  showGame();
+  if (!window.__POOL__) window.__POOL__ = await loadPoolData();
+  startGame(window.__POOL__);
 });
 
 document.getElementById("howto-toggle").addEventListener("click", () => {
@@ -116,11 +206,6 @@ document.getElementById("howto-toggle").addEventListener("click", () => {
   if (content.style.display === "block") { content.style.display = "none"; toggle.textContent = "How to Play +"; }
   else { content.style.display = "block"; toggle.textContent = "How to Play –"; }
 });
-
-/* ================= Answer selection ================= */
-function isRandomMode() {
-  return localStorage.getItem("dev_force_index") !== null;
-}
 
 /* ================= Helpers: badges, names, ranges ================= */
   
@@ -183,11 +268,12 @@ function levelColor(gMin, gMax, aMin, aMax) {
   if (rangesOverlap(gMin, gMax, aMin, aMax)) return 'green';
   return rangeGap(gMin, gMax, aMin, aMax) <= CONFIG.LEVEL_CLOSE_GAP ? 'yellow' : 'red';
 }
-// Display: "—" for non-equipables; "min–max" or single; add ✓ / ↑ / ↓
+// Display: "min–max" or single; add ✓ / ↑ / ↓
 function levelDisplay(gMin, gMax, aMin, aMax) {
-  if (gMin == null || gMax == null) return "—";
-  const text = (gMin === gMax) ? `${gMax}` : `${gMin}–${gMax}`;
-  if (aMin == null || aMax == null) return text; // answer not equipable
+  const min = (gMin == null) ? 0 : gMin;
+  const max = (gMax == null) ? 0 : gMax;
+  const text = (min === max) ? `${max}` : `${min}–${max}`;
+  if (aMin == null || aMax == null) return text;
   if (rangesOverlap(gMin, gMax, aMin, aMax)) return `${text} ✓`;
   if (gMax < aMin) return `${text} ↑`; // need higher
   if (gMin > aMax) return `${text} ↓`; // need lower
@@ -277,8 +363,9 @@ function getDailyAnswerFromCategory(categoryPool) {
   
 function startGame(pool) {
   const modeEl = document.getElementById("mode");
-  modeEl.innerHTML = isRandomMode()
-    ? `Mode: <span class="random">Random (Dev)</span>`
+  const endless = isEndlessMode();
+  modeEl.innerHTML = endless
+    ? `Mode: <span class="endless">Endless</span>`
     : `Mode: <span class="daily">Daily</span>`;
 
   const playablePool = getPlayablePool(pool);
@@ -294,12 +381,9 @@ function startGame(pool) {
   let categoryPool;
   let answer;
 
-  if (isRandomMode()) {
-    // Dev forced index picks a specific item from the playable pool
-    const forced = parseInt(localStorage.getItem("dev_force_index") ?? "0", 10);
-    const idx = Math.max(0, Math.min(playablePool.length - 1, isNaN(forced) ? 0 : forced));
+  if (endless) {
+    const idx = Math.floor(Math.random() * playablePool.length);
     answer = playablePool[idx];
-
     dailyCategory = answer.classType;
     categoryPool = playablePool.filter(i => i.classType === dailyCategory);
   } else {
@@ -319,16 +403,16 @@ function startGame(pool) {
   const categoryEl = document.getElementById("category");
 
   const today = new Date().toDateString();
+  const persistGuesses = !endless;
+  const guessesKey = persistGuesses ? GUESSES_KEY_DAILY : null;
 
-  let guessesData = JSON.parse(localStorage.getItem("guesses_items")) || {
-    date: today,
-    category: dailyCategory,
-    guesses: []
-  };
+  let guessesData = persistGuesses
+    ? (JSON.parse(localStorage.getItem(guessesKey)) || { date: today, category: dailyCategory, guesses: [] })
+    : { guesses: [] };
 
-  if ((!isRandomMode()) && (guessesData.date !== today || guessesData.category !== dailyCategory)) {
+  if (persistGuesses && (guessesData.date !== today || guessesData.category !== dailyCategory)) {
     guessesData = { date: today, category: dailyCategory, guesses: [] };
-    localStorage.setItem("guesses_items", JSON.stringify(guessesData));
+    localStorage.setItem(guessesKey, JSON.stringify(guessesData));
   }
 
   const guessInput = document.getElementById("guess-input");
@@ -339,36 +423,65 @@ function startGame(pool) {
   const counterEl = document.getElementById("guess-counter");
 
   tableBody.innerHTML = "";
+  result.textContent = "";
+  result.style.color = "";
+  suggestionBox.innerHTML = "";
+  guessInput.value = "";
   updateCounter();
   guessInput.focus();
 
   /* ================= Hints and Search Scope ================= */
+  // Stages: 0 = ??? | 1 = Weapon/Armor/Acc (guess 3) | 2 = exact category (guess 5) | 3 = + classes (guess 7) | 4 = + source (guess 9)
   function updateHintsAndSearchScope() {
     const misses = (guessesData.guesses || []).length;
     const stage = hintStageFromMisses(misses);
+    const group = broadGroupFromClassType(dailyCategory);
 
     if (categoryEl) {
-      if (stage === 0) categoryEl.textContent = "Hint: ???";
-      else if (stage === 1) categoryEl.textContent = `Hint: ${broadGroupFromClassType(dailyCategory)}`;
-      else categoryEl.textContent = `Hint: ${dailyCategory}`;
+      if (!isHintsEnabled()) {
+        categoryEl.textContent = "Hint: —";
+        window.__SUGGEST_POOL__ = playablePool;
+        return;
+      }
+      if (stage === 0) {
+        categoryEl.textContent = "Hint: ???";
+      } else if (stage === 1) {
+        categoryEl.textContent = `Hint: ${group}`;
+      } else if (stage === 2) {
+        categoryEl.textContent = `Hint: ${dailyCategory}`;
+      } else if (stage === 3) {
+        const classTxt = classesToText(normalizeClasses(answer), isAbbrevEnabled());
+        categoryEl.textContent = `Hint: ${dailyCategory} · Classes: ${classTxt}`;
+      } else {
+        const classTxt = classesToText(normalizeClasses(answer), isAbbrevEnabled());
+        const src = (answer.droppedBy || "—").trim();
+        categoryEl.textContent = `Hint: ${dailyCategory} · Classes: ${classTxt} · Source: ${src}`;
+      }
     }
 
     if (stage === 0) {
       window.__SUGGEST_POOL__ = playablePool;
     } else if (stage === 1) {
-      const group = broadGroupFromClassType(dailyCategory);
       window.__SUGGEST_POOL__ = playablePool.filter(it => broadGroupFromClassType(it.classType) === group);
     } else {
       window.__SUGGEST_POOL__ = categoryPool;
     }
   }
 
-  // render prior guesses
-  (guessesData.guesses || []).forEach(g => addGuessToTable(g));
-  updateHintsAndSearchScope();
-
   function updateCounter() {
     counterEl.textContent = `Guess #${(guessesData.guesses?.length || 0) + 1}`;
+  }
+
+  function getCurrentGuesses() {
+    if (persistGuesses && guessesKey) {
+      try {
+        const saved = JSON.parse(localStorage.getItem(guessesKey) || "null");
+        if (saved && Array.isArray(saved.guesses)) return saved.guesses;
+      } catch (e) {
+        // ignore parse errors and fall back to in-memory
+      }
+    }
+    return guessesData.guesses || [];
   }
 
   function addGuessToTable(item) {
@@ -381,7 +494,7 @@ function startGame(pool) {
   row.innerHTML = `
     <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
     <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
-    <td class="${classesColor(gClasses, aClasses)}">${classesToText(gClasses)}</td>
+    <td class="${classesColor(gClasses, aClasses)}">${classesToText(gClasses, isAbbrevEnabled())}</td>
     <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
     <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
     <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
@@ -403,6 +516,18 @@ function classesColor(g, a) {
     if (gType === aType) return 'yellow';
     return 'red';
   }
+
+  // render prior guesses
+  getCurrentGuesses().forEach(g => addGuessToTable(g));
+  updateHintsAndSearchScope();
+  updateCounter();
+
+  window.__REFRESH_UI__ = () => {
+    tableBody.innerHTML = "";
+    getCurrentGuesses().forEach(g => addGuessToTable(g));
+    updateHintsAndSearchScope();
+    updateCounter();
+  };
 
   // Suggestions (narrowed by hint stage: __SUGGEST_POOL__ or categoryPool)
   guessInput.addEventListener("input", () => {
@@ -442,11 +567,15 @@ function classesColor(g, a) {
     }
 
     guessesData.guesses.push(item);
-    localStorage.setItem("guesses_items", JSON.stringify(guessesData));
+    if (persistGuesses && guessesKey) {
+      localStorage.setItem(guessesKey, JSON.stringify(guessesData));
+    }
     addGuessToTable(item);
 
     if (item.name.toLowerCase() === answer.name.toLowerCase()) {
-      result.textContent = `🎉 Correct! You got it in ${guessesData.guesses.length} guesses.`;
+      result.textContent = endless
+        ? "🎉 Correct! Press Next Item to continue."
+        : `🎉 Correct! You got it in ${guessesData.guesses.length} guesses.`;
       result.style.color = "#6dff6d";
     } else {
       updateHintsAndSearchScope();
@@ -460,3 +589,42 @@ function classesColor(g, a) {
     guessInput.focus();
   });
 }
+
+/* ================= App Boot ================= */
+async function startApp() {
+  if (!localStorage.getItem(MODE_KEY)) setMode(MODE_DAILY);
+  localStorage.removeItem("dev_force_index");
+
+  initSettingsUI();
+  updateEndlessButton();
+
+  const title = document.getElementById("title");
+  if (title) title.addEventListener("click", showMenu);
+
+  const endlessBtn = document.getElementById("endless-btn");
+  if (endlessBtn) {
+    endlessBtn.addEventListener("click", async () => {
+      const nextMode = isEndlessMode() ? MODE_DAILY : MODE_ENDLESS;
+      setMode(nextMode);
+      updateEndlessButton();
+
+      showGame();
+
+      if (!window.__POOL__) window.__POOL__ = await loadPoolData();
+      startGame(window.__POOL__);
+    });
+  }
+  const endlessResetBtn = document.getElementById("endless-reset-btn");
+  if (endlessResetBtn) {
+    endlessResetBtn.addEventListener("click", () => {
+      if (isEndlessMode()) location.reload();
+    });
+  }
+
+  showGame();
+
+  window.__POOL__ = await loadPoolData();
+  startGame(window.__POOL__);
+}
+
+startApp();
