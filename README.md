@@ -49,19 +49,6 @@ Guess the hidden item by entering names — the table will give you feedback on 
 - Drop/source column width capped with ellipsis
 - Exact source match highlighted in green
 
-## 📅 Changelog 🧩 Update v0.3 – Gameplay + UX + Data
-- Daily mode default + Endless mode toggle + Next Item
-- Settings modal (live updates) + shareable results
-- Wordle-style share grid (6-row cap, summary line)
-- Progressive hint system (multi‑stage) + hint settings
-- Abbreviated class display (toggle)
-- Grey “no match” cells + yellow level gap set to ±20
-- Expanded source badge logic with [Event] + [PQ]
-- Drop source cleanup (multi-tag badges, ordered lists, mob list truncation)
-- Fixed settings refresh issues + guess counter consistency
-- Item data sheet fully overhauled for accuracy
-- Compiled color/gender variants for fair play
-
 ## 🚀 Future Plans
 - Add NPC and Boss categories
 - Implement daily leaderboard
