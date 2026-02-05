@@ -2,7 +2,7 @@
 const CONFIG = {
   LEVEL_CLOSE_GAP: 20,
   MAX_SUGGESTIONS: 8,
-  HINT_STAGES: [3, 5, 7, 9]  // misses before next hint (stage 1 at 3, stage 2 at 5, etc.)
+  HINT_STAGES: [2, 4, 6, 8]  // misses before next hint (stage 1 at 2, stage 2 at 4, etc.)
 };
 
 const MODE_KEY = "mode";
@@ -487,20 +487,32 @@ function startGame(pool) {
         window.__SUGGEST_POOL__ = playablePool;
         return;
       }
-      if (stage === 0) {
-        categoryEl.textContent = "Hint: ???";
-      } else if (stage === 1) {
-        categoryEl.textContent = `Hint: ${group}`;
-      } else if (stage === 2) {
-        categoryEl.textContent = `Hint: ${dailyCategory}`;
-      } else if (stage === 3) {
+
+      const tags = getDropTags(answer.droppedBy || "", parseSourceItems(answer.droppedBy || ""));
+      const map = {
+        pq:       { cls: "pq",    label: "[PQ]" },
+        gachapon: { cls: "gach",  label: "[Gachapon]" },
+        quest:    { cls: "quest", label: "[Quest]" },
+        store:    { cls: "store", label: "[Store]" },
+        event:    { cls: "event", label: "[Event]" },
+        mob:      { cls: "mob",   label: "[Mob]" }
+      };
+      const badges = tags.map(t => map[t]).filter(Boolean)
+        .map(entry => `<span class="badge ${entry.cls}">${entry.label}</span>`).join("");
+
+      let hintHtml = `Hint: ${badges}`;
+      if (stage >= 1) hintHtml += ` <span class="hint-sep">•</span> ${group}`;
+      if (stage >= 2) hintHtml += ` <span class="hint-sep">•</span> ${dailyCategory}`;
+      if (stage >= 3) {
         const classTxt = classesToText(normalizeClasses(answer), isAbbrevEnabled());
-        categoryEl.textContent = `Hint: ${dailyCategory} · Classes: ${classTxt}`;
-      } else {
-        const classTxt = classesToText(normalizeClasses(answer), isAbbrevEnabled());
-        const src = (answer.droppedBy || "—").trim();
-        categoryEl.textContent = `Hint: ${dailyCategory} · Classes: ${classTxt} · Source: ${src}`;
+        hintHtml += ` <span class="hint-sep">•</span> Classes: ${classTxt}`;
       }
+      if (stage >= 4) {
+        const src = (answer.droppedBy || "—").trim();
+        hintHtml += ` <span class="hint-sep">•</span> Source: ${src}`;
+      }
+
+      categoryEl.innerHTML = hintHtml;
     }
 
     if (stage === 0) {
@@ -672,7 +684,11 @@ function classesColor(g, a) {
     if (!val) return;
 
     const suggestPool = (window.__SUGGEST_POOL__ != null) ? window.__SUGGEST_POOL__ : categoryPool;
-    const matches = suggestPool.filter(e => e.name.toLowerCase().includes(val));
+    const matches = suggestPool.filter(e => {
+      const nameMatch = e.name.toLowerCase().includes(val);
+      const typeMatch = (e.classType || "").toLowerCase().includes(val);
+      return nameMatch || typeMatch;
+    });
     matches.slice(0, CONFIG.MAX_SUGGESTIONS).forEach(match => {
       const li = document.createElement("li");
       li.textContent = match.name;
