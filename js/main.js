@@ -1,6 +1,6 @@
 /* ================= Config ================= */
 const CONFIG = {
-  LEVEL_CLOSE_GAP: 5,
+  LEVEL_CLOSE_GAP: 20,
   MAX_SUGGESTIONS: 8,
   HINT_STAGES: [3, 5, 7, 9]  // misses before next hint (stage 1 at 3, stage 2 at 5, etc.)
 };
@@ -126,13 +126,22 @@ const CLASS_ABBREV = {
   Beginner: "Beg"
 };
 
+const ALL_CLASSES = ["Warrior", "Magician", "Bowman", "Thief", "Pirate", "Beginner"];
+
 function abbreviateClass(name) {
   const n = (name || "").trim();
   return CLASS_ABBREV[n] || n.slice(0, 3);
 }
 
+function hasAllClasses(arr) {
+  const set = new Set(arr || []);
+  if (set.size !== ALL_CLASSES.length) return false;
+  return ALL_CLASSES.every(c => set.has(c));
+}
+
 function classesToText(arr, abbreviate = false) {
   if (!arr.length) return "—";
+  if (hasAllClasses(arr)) return "All";
   const list = abbreviate ? arr.map(abbreviateClass) : arr;
   return list.join(", ");
 }
@@ -203,33 +212,73 @@ document.getElementById("howto-toggle").addEventListener("click", () => {
 
 /* ================= Helpers: badges, names, ranges ================= */
   
-function getDropType(src) {
+function getDropTags(src, items = []) {
   const s = (src || "").toLowerCase().trim();
-  if (!s) return "mob";
+  const tags = [];
 
-  if (s.includes("gach")) return "gachapon";
-  if (s.includes("pq")) return "pq";
-  if (s.includes("quest")) return "quest";
+  if (s.includes("gachapon")) tags.push("gachapon");
+  if (s.includes("store")) tags.push("store");
+  if (s.includes("event")) tags.push("event");
+  if (s.includes("quest")) tags.push("quest");
+  if (s.includes("pq")) tags.push("pq");
 
-  // NPC shop purchases as Store (exclude cash/nx)
-  if (s.includes("store") || (s.includes("shop") && !s.includes("cash") && !s.includes("nx"))) {
-    return "store";
-  }
+  // If none of the above tags are present, assume mob
+  if (tags.length === 0) tags.push("mob");
 
-  return "mob"; // default mob/boss
+  // If any listed item isn't a known source type, include mob too
+  const hasMobItem = (items || []).some(item => {
+    const t = item.toLowerCase();
+    return !(
+      t.includes("gachapon") ||
+      t.includes("store") ||
+      t.includes("event") ||
+      t.includes("quest") ||
+      t.includes("pq")
+    );
+  });
+  if (hasMobItem && !tags.includes("mob")) tags.push("mob");
+
+  return [...new Set(tags)];
 }
 
-function formatSourceWithBadge(src) {
-  const t = getDropType(src);
+function parseSourceItems(src) {
+  return (src || "")
+    .split(",")
+    .map(p => p.trim())
+    .filter(Boolean);
+}
+
+function orderSourceItems(items, answerItems) {
+  const answerSet = new Set((answerItems || []).map(s => s.toLowerCase()));
+  const matches = [];
+  const rest = [];
+  for (const item of items) {
+    if (answerSet.has(item.toLowerCase())) matches.push(item);
+    else rest.push(item);
+  }
+  return [...matches, ...rest];
+}
+
+function formatSourceWithBadge(src, highlightText = false, answerSrc = "") {
+  const items = orderSourceItems(parseSourceItems(src), parseSourceItems(answerSrc));
+  const tags = getDropTags(src, items);
   const map = {
     pq:       { cls: "pq",    label: "[PQ]" },
     gachapon: { cls: "gach",  label: "[Gachapon]" },
     quest:    { cls: "quest", label: "[Quest]" },
     store:    { cls: "store", label: "[Store]" },
+    event:    { cls: "event", label: "[Event]" },
     mob:      { cls: "mob",   label: "[Mob]" }
   };
-  const entry = map[t] || map.mob;
-  return `<span class="badge ${entry.cls}">${entry.label}</span>${src || ""}`;
+  const badges = tags.map(t => map[t]).filter(Boolean)
+    .map(entry => `<span class="badge ${entry.cls}">${entry.label}</span>`).join("");
+  const displayItems = (tags.includes("mob") && items.length > 5)
+    ? [...items.slice(0, 5), "..."]
+    : items;
+  const textClass = ["drop-text", highlightText ? "drop-exact" : ""].filter(Boolean).join(" ");
+  const text = displayItems.length ? displayItems.join(", ") : "";
+  const textSpan = text ? `<span class="${textClass}">${text}</span>` : "";
+  return `<div class="drop-badges">${badges}</div>${textSpan}`;
 }
   
 function highlightName(guessName, answerName) {
@@ -548,13 +597,15 @@ function startGame(pool) {
   const gClasses = normalizeClasses(item);
   const aClasses = normalizeClasses(answer);
 
+  const dropExact = (item.droppedBy || "") === (answer.droppedBy || "");
+
   row.innerHTML = `
     <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
     <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
     <td class="${classesColor(gClasses, aClasses)}">${classesToText(gClasses, isAbbrevEnabled())}</td>
     <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
     <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
-    <td class="${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy)}</td>
+    <td class="drop-col ${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy, dropExact, answer.droppedBy)}</td>
   `;
   tableBody.appendChild(row);
 }
@@ -568,10 +619,10 @@ function classesColor(g, a) {
   
   function dropColor(guessDrop, answerDrop) {
     if ((guessDrop || "") === (answerDrop || "")) return 'green';
-    const gType = getDropType(guessDrop);
-    const aType = getDropType(answerDrop);
-    if (gType === aType) return 'yellow';
-    return 'red';
+    const gTags = getDropTags(guessDrop);
+    const aTags = getDropTags(answerDrop);
+    const overlap = gTags.some(t => aTags.includes(t));
+    return overlap ? 'yellow' : 'red';
   }
 
   // render prior guesses

@@ -29,7 +29,7 @@ h1 { cursor:pointer; color:#6d88ff; margin-bottom:8px; }
 input { padding:8px; width:260px; margin-top:10px; border-radius:6px; border:none; }
 button#submit-btn { padding:8px 14px; margin-left:5px; margin-top:2px; cursor:pointer; background:#6d88ff; border:none; border-radius:6px; color:white; }
 
-table { width:100%; border-collapse:collapse; margin-top:15px; }
+table { width:100%; border-collapse:collapse; margin-top:15px; table-layout:fixed; }
 th, td { padding:8px; border:1px solid #555; }
 th { background:#333; }
 .green { background:#2e7d32; }
@@ -58,6 +58,12 @@ th { background:#333; }
 .badge.quest { background:#8a5a2b; }  /* Quest brown */
 .badge.mob { background:#555; }       /* Mob gray */
 .badge.store { background:#2aa198; }  /* teal */
+.badge.event { background:#c56b1f; }  /* event orange */
+.drop-exact { color:#6dff6d; font-weight:600; }
+.drop-col { width:32%; }
+.drop-badges { display:block; margin-bottom:2px; }
+.drop-text { display:block; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; }
+.drop-col { text-align:center; }
 
 /* Name highlight */
 .name-partial b { color:#fff; }
