@@ -62,4 +62,5 @@ Guess the hidden item by entering names — the table will give you feedback on 
 
 ## 📜 Credits
 Created by Jacob / MMScrub  
-Inspired by **MapleLegends** and community projects like **MCDLE**.
+Inspired by **Wordle**, **MapleLegends**, and community projects like **MCDLE**.
+**MapleStory** is a trademark of **Nexon**.
