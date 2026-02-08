@@ -1,8 +1,4 @@
-Current version: v0.3.2
-
-See CHANGELOG.md for details.
-
-# 🎯 MapleGuessr (Early Access v0.3.2)
+ 🎯 MapleGuessr (Early Access v0.3.2)
 
 A daily guessing game for MapleLegends items, inspired by Wordle-style mechanics.  
 Guess the hidden item by entering names — the table will give you feedback on your guess based on stats and source.
@@ -59,4 +55,5 @@ Guess the hidden item by entering names — the table will give you feedback on 
 
 ## 📜 Credits
 Created by Jacob / MMScrub  | Play-Tested by @lynerd
-Inspired by **MapleLegends** and community projects like **MCDLE**, and **Wordle**.
+Inspired by **MapleLegends** and community projects like **MCDLE**, and **Wordle**
+See CHANGELOG.md for details
