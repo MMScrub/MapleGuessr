@@ -1,4 +1,5 @@
-Current version: v0.3.2 
+Current version: v0.3.2
+
 See CHANGELOG.md for details.
 
 # 🎯 MapleGuessr (Early Access v0.3.2)
