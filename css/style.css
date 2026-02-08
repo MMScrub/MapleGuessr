@@ -28,9 +28,10 @@ h1 { cursor:pointer; color:#6d88ff; margin-bottom:8px; }
 .game-container { display:none; max-width:980px; margin:0 auto; }
 
 input { padding:8px; width:260px; margin-top:10px; border-radius:6px; border:none; }
-button#submit-btn { padding:8px 14px; margin-left:5px; margin-top:2px; cursor:pointer; background:#6d88ff; border:none; border-radius:6px; color:white; }
+button#submit-btn { padding:8px 14px; margin-left:5px; margin-top:6px; cursor:pointer; background:#6d88ff; border:none; border-radius:6px; color:white; }
 
-table { width:100%; border-collapse:collapse; margin-top:15px; table-layout:fixed; }
+.table-wrap { width:100%; margin-top:15px; }
+table { width:100%; border-collapse:collapse; table-layout:fixed; }
 th, td { padding:8px; border:1px solid #555; }
 th { background:#333; }
 .green { background:#2e7d32; }
@@ -65,6 +66,13 @@ th { background:#333; }
 .drop-badges { display:block; margin-bottom:2px; }
 .drop-text { display:block; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; }
 .drop-col { text-align:center; }
+
+@media (max-width: 640px) {
+  body { padding:12px; }
+  .table-wrap { transform: scale(0.92); transform-origin: top center; }
+  th, td { padding:6px; font-size:12px; }
+  #guess-input { width:220px; }
+}
 
 /* Name highlight */
 .name-partial b { color:#fff; }

@@ -353,7 +353,7 @@
       "Thief",
       "Pirate"
     ],
-    "tradable": false,
+    "tradable": true,
     "droppedBy": "Quest - NLC"
   },
   {

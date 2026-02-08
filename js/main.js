@@ -1,7 +1,7 @@
 /* ================= Config ================= */
 const CONFIG = {
   LEVEL_CLOSE_GAP: 20,
-  MAX_SUGGESTIONS: 8,
+  MAX_SUGGESTIONS: 20,
   HINT_STAGES: [2, 4, 6, 8]  // misses before next hint (stage 1 at 2, stage 2 at 4, etc.)
 };
 
@@ -14,12 +14,25 @@ const SETTINGS = {
 };
 const GUESSES_KEY_DAILY = "guesses_items_daily";
 
+function normalizeClassType(classType) {
+  const key = (classType || "").trim().toLowerCase();
+  const map = {
+    "eye acc": "Eye Accessory",
+    "face acc": "Face Accessory"
+  };
+  return map[key] || classType;
+}
+
 /* ================= Load data from data/pool.json ================= */
 async function loadPoolData() {
   try {
     const res = await fetch('data/pool.json');
     if (!res.ok) throw new Error('Missing data/pool.json');
-    return res.json();
+    const data = await res.json();
+    return (data || []).map(it => ({
+      ...it,
+      classType: normalizeClassType(it.classType)
+    }));
   } catch (e) {
     if (window.__POOL_EMBED__) return window.__POOL_EMBED__;
     console.error('Could not load data/pool.json. Open via a local server (e.g. Live Server) or use embedded pool.', e);
@@ -677,14 +690,13 @@ function classesColor(g, a) {
     };
   }
 
-  // Suggestions (narrowed by hint stage: __SUGGEST_POOL__ or categoryPool)
+  // Suggestions (search across all playable items)
   guessInput.oninput = () => {
     const val = guessInput.value.trim().toLowerCase();
     suggestionBox.innerHTML = "";
     if (!val) return;
 
-    const suggestPool = (window.__SUGGEST_POOL__ != null) ? window.__SUGGEST_POOL__ : categoryPool;
-    const matches = suggestPool.filter(e => {
+    const matches = playablePool.filter(e => {
       const nameMatch = e.name.toLowerCase().includes(val);
       const typeMatch = (e.classType || "").toLowerCase().includes(val);
       return nameMatch || typeMatch;
