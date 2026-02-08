@@ -69,8 +69,8 @@ th { background:#333; }
 
 @media (max-width: 640px) {
   body { padding:12px; }
-  .table-wrap { transform: scale(0.92); transform-origin: top center; }
-  th, td { padding:6px; font-size:12px; }
+  .table-wrap { transform: scale(0.85); transform-origin: top center; }
+  th, td { padding:6px; font-size:11px; }
   #guess-input { width:220px; }
 }
 
