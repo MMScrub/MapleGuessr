@@ -24,7 +24,7 @@ and this project adheres to semantic versioning (pre-1.0).
 
 ---
 
-## [0.3.1] – 2026-02-08
+## [0.3.1] – 2026-02-06
 ### Added
 - Equipment title display
 - Cumulative hint behavior (hints no longer replace previous ones)
@@ -41,7 +41,7 @@ and this project adheres to semantic versioning (pre-1.0).
 
 ---
 
-## [0.3.0] – 2026-02-08
+## [0.3.0] – 2026-02-05
 ### Added
 - Daily mode as default with Endless mode toggle
 - Next Item control for Endless mode
