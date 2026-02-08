@@ -596,11 +596,10 @@ function startGame(pool) {
       ].join("");
     };
 
-    const visibleRows = displayGuesses.slice(0, 6).map(rowForGuess);
-    const remaining = displayGuesses.length - visibleRows.length;
+    const visibleRows = displayGuesses.slice(-6).map(rowForGuess);
     const grid = [
       ...visibleRows,
-      ...(remaining > 0 ? [`(+${remaining} more guesses)`] : [])
+      `(${displayGuesses.length} total guesses)`
     ].join("\n");
     const modeLabel = isEndlessMode() ? "Endless" : "Daily";
     const hintsLabel = isHintsEnabled() ? "Hints" : "No Hints";
@@ -625,11 +624,11 @@ function startGame(pool) {
   const dropExact = (item.droppedBy || "") === (answer.droppedBy || "");
 
   row.innerHTML = `
-    <td class="${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
-    <td class="${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
-    <td class="${classesColor(gClasses, aClasses)}">${classesToText(gClasses, isAbbrevEnabled())}</td>
-    <td class="${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
-    <td class="${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
+    <td class="col-item ${item.name === answer.name ? 'green' : 'red'} name-partial">${highlightName(item.name, answer.name)}</td>
+    <td class="col-level ${levelColor(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}">${levelDisplay(item.minLevel, item.maxLevel, answer.minLevel, answer.maxLevel)}</td>
+    <td class="col-class ${classesColor(gClasses, aClasses)}">${classesToText(gClasses, isAbbrevEnabled())}</td>
+    <td class="col-category ${item.classType === answer.classType ? 'green' : 'red'}">${item.classType}</td>
+    <td class="col-tradable ${item.tradable === answer.tradable ? 'green' : 'red'}">${item.tradable ? 'Yes' : 'No'}</td>
     <td class="drop-col ${dropColor(item.droppedBy, answer.droppedBy)}">${formatSourceWithBadge(item.droppedBy, dropExact, answer.droppedBy)}</td>
   `;
   tableBody.appendChild(row);
@@ -644,8 +643,8 @@ function classesColor(g, a) {
   
   function dropColor(guessDrop, answerDrop) {
     if ((guessDrop || "") === (answerDrop || "")) return 'green';
-    const gTags = getDropTags(guessDrop);
-    const aTags = getDropTags(answerDrop);
+    const gTags = getDropTags(guessDrop, parseSourceItems(guessDrop));
+    const aTags = getDropTags(answerDrop, parseSourceItems(answerDrop));
     const overlap = gTags.some(t => aTags.includes(t));
     return overlap ? 'yellow' : 'red';
   }

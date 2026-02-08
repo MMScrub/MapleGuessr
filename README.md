@@ -1,9 +1,10 @@
-# 🎯 MapleGuessr (Early Access v0.3.1)
+Current version: v0.3.2 
+See CHANGELOG.md for details.
+
+# 🎯 MapleGuessr (Early Access v0.3.2)
 
 A daily guessing game for MapleLegends items, inspired by Wordle-style mechanics.  
 Guess the hidden item by entering names — the table will give you feedback on your guess based on stats and source.
-
-Try it here: https://mmscrub.github.io/MapleGuessr/
 
 ## 📖 How to Play
 1. ▶️ The game auto-starts in **Daily** mode. Click **MapleGuessr** to return to the menu (Equipment only; NPCs/Bosses are WIP).
@@ -38,40 +39,23 @@ Try it here: https://mmscrub.github.io/MapleGuessr/
 - Data is loaded from `data/pool.json` (run with a local server like Live Server).
 - Equip Level is stored as **minLevel/maxLevel**; missing values are treated as `0` for display.
 - Data accuracy is based on MapleLegends (v62) with custom exceptions where applicable.
-- The item data sheet was fully overhauled for accuracy.
 - Certain items are compiled together to keep gameplay fair and fun (e.g., color/gender variants).
 
-## 📅 Changelog 🧩 Update v0.3.1 – Gameplay + UX
-- Equipment title
-- Source badges as the first hint (badges only)
-- Hints now accumulate instead of replacing
-- Earlier Weapon/Armor/Acc hint
-- Search now matches category names (e.g., "claw", "pendant") across all playable items
-- Drop/source formatting improvements (multi‑tags, ordering matches first, truncation)
-- Drop/source column width capped with ellipsis and mobile scaling
+## 📅 Changelog 🧩 Update v0.3.2 – Mobile + UX
+- Mobile table scaling and column clipping (ellipsis)
+- Column headers shortened for mobile readability
+- Source badges as the first hint (badge-only) and cumulative hint display
+- Search matches category terms across all playable items
+- Drop/source formatting improvements (multi‑tags, ordering, truncation)
+- Wordle-style share output uses last 6 rows + total guesses
 - Exact source match highlighted in green
 
-## 📅 Changelog 🧩 Update v0.3 – Gameplay + UX + Data
-- Daily mode default + Endless mode toggle + Next Item
-- Settings modal (live updates) + shareable results
-- Wordle-style share grid (6-row cap, summary line)
-- Progressive hint system (multi‑stage) + hint settings
-- Abbreviated class display (toggle)
-- Grey “no match” cells + yellow level gap set to ±20
-- Expanded source badge logic with [Event] + [PQ]
-- Drop source cleanup (multi-tag badges, ordered lists, mob list truncation)
-- Fixed settings refresh issues + guess counter consistency
-- Item data sheet fully overhauled for accuracy
-- Compiled color/gender variants for fair play
-
 ## 🚀 Future Plans
-- Add NPC and Boss categories
-- Implement daily leaderboard
 - Expand item list
-- Mobile-friendly UI improvements
-
+- Implement daily leaderboard
+- Add NPC and Boss categories
 ---
 
 ## 📜 Credits
-Created by Jacob / MMScrub  
-Inspired by **MapleLegends** and community projects like **MCDLE**.
+Created by Jacob / MMScrub  | Play-Tested by @lynerd
+Inspired by **MapleLegends** and community projects like **MCDLE**, and **Wordle**.

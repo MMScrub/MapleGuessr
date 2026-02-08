@@ -66,11 +66,15 @@ th { background:#333; }
 .drop-badges { display:block; margin-bottom:2px; }
 .drop-text { display:block; max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:center; }
 .drop-col { text-align:center; }
+.col-item { width:18%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.col-level { width:12%; }
+.col-class { width:12%; white-space:normal; word-break:break-word; }
+.col-category { width:12%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.col-tradable { width:10%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
 @media (max-width: 640px) {
   body { padding:12px; }
-  .table-wrap { transform: scale(0.85); transform-origin: top center; }
-  th, td { padding:6px; font-size:11px; }
+  th, td { padding:6px; font-size:10.5px; }
   #guess-input { width:220px; }
 }
 
