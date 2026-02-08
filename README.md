@@ -54,6 +54,6 @@ Guess the hidden item by entering names — the table will give you feedback on 
 ---
 
 ## 📜 Credits
-Created by Jacob / MMScrub  | Play-Tested by @lynerd
-Inspired by **MapleLegends** and community projects like **MCDLE**, and **Wordle**
-See CHANGELOG.md for details
+- Created by Jacob / MMScrub  | Play-Tested by @lynerd 
+- Inspired by **MapleLegends** and community projects like **MCDLE**, and **Wordle** 
+- See CHANGELOG.md for details
